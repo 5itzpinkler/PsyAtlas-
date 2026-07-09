@@ -37,6 +37,25 @@ const AtlasMap = (() => {
     setParas(document.getElementById('p-func'), n.func);
     setParas(document.getElementById('p-clin'), n.clin);
 
+    // Секція джерел — реальні цитати, якщо є для цього вузла
+    const srcWrap = document.getElementById('p-sources');
+    if(srcWrap){
+      srcWrap.innerHTML = '';
+      if(n.sources && n.sources.length){
+        const ul = document.createElement('ul');
+        ul.className = 'sources';
+        n.sources.forEach(s=>{
+          const li = document.createElement('li');
+          const link = s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>` : esc(s.title);
+          li.innerHTML = `<span class="src-authors">${esc(s.authors)}</span> <span class="src-year">(${esc(s.year)})</span>. ${link}`;
+          ul.appendChild(li);
+        });
+        srcWrap.appendChild(ul);
+      } else {
+        srcWrap.innerHTML = '<div class="no-sources">Джерела для цього вузла ще не додані.</div>';
+      }
+    }
+
     // Кнопка переходу в інший домен (для stub-вузлів)
     const jumpWrap = document.getElementById('p-jump');
     jumpWrap.innerHTML = '';
@@ -111,6 +130,18 @@ const AtlasMap = (() => {
     }, cfg.layout||{})).run();
 
     cy.fit(null, 85);
+
+    // Текст завжди читабельний на екрані незалежно від рівня зуму графа —
+    // без цього щільні домени (57 вузлів) стискаються до нечитабельних 4px.
+    const SCREEN_PX = 12.5, MIN_GRAPH_PX = 7, MAX_GRAPH_PX = 60;
+    function rescaleLabels(){
+      const z = cy.zoom();
+      const graphPx = Math.min(MAX_GRAPH_PX, Math.max(MIN_GRAPH_PX, SCREEN_PX / z));
+      cy.style().selector('node').style('font-size', graphPx).update();
+      cy.style().selector('edge').style('font-size', Math.min(MAX_GRAPH_PX*0.8, Math.max(MIN_GRAPH_PX*0.7, SCREEN_PX*0.8/z))).update();
+    }
+    cy.on('zoom', rescaleLabels);
+    rescaleLabels();
     const ld = document.getElementById('loading'); if(ld) ld.style.display='none';
 
     cy.on('tap','node', e => openPanel(e.target.data()));

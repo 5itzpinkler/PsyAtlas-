@@ -55,6 +55,8 @@
   <div id="p-func"></div>
   <div class="label">Клінічне значення</div>
   <div id="p-clin"></div>
+  <div class="label">Джерела</div>
+  <div id="p-sources"></div>
   <div class="xref" id="p-xref"></div>
 </div>
 
@@ -168,6 +170,8 @@ const catLabel = {sub:'попередник',nt:'нейромедіатор',met
   messenger:'другий посередник',transporter:'транспортер',ion:'іонний потік',vesicle:'везикулярний цикл'};
 
 (()=>{ const n=nodes.find(x=>x.data.id==='ser'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'depression',label:'Роль у депресії'}]); } })();
+const _src = {"da": [{"authors": "Carlsson, A., Lindqvist, M. & Magnusson, T.", "year": "1957", "title": "3,4-Dihydroxyphenylalanine and 5-hydroxytryptophan as reserpine antagonists (перше визнання дофаміну як медіатора)", "url": "https://doi.org/10.1038/1801200a0"}]};
+nodes.forEach(n=>{ if(_src[n.data.id]) n.data.sources = _src[n.data.id]; });
 AtlasMap.build({nodes, edges, catColor, catLabel});
 </script>
 </body>

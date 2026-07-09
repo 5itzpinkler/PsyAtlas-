@@ -51,6 +51,8 @@
   <div id="p-func"></div>
   <div class="label">Клінічне значення</div>
   <div id="p-clin"></div>
+  <div class="label">Джерела</div>
+  <div id="p-sources"></div>
   <div class="xref" id="p-xref"></div>
 </div>
 
@@ -134,6 +136,8 @@ const _xr = {
   neurogenesis:[{domain:'affect',focus:'cortisol',label:'Кортизол пригнічує нейрогенез'}]
 };
 nodes.forEach(n=>{ if(_xr[n.data.id]) n.data.xref=_xr[n.data.id]; });
+const _src = {"ltp": [{"authors": "Bliss, T.V. & Lømo, T.", "year": "1973", "title": "Long-lasting potentiation of synaptic transmission in the dentate area of the anaesthetized rabbit following stimulation of the perforant path", "url": "https://doi.org/10.1113/jphysiol.1973.sp010273"}], "creb": [{"authors": "Kandel, E.R.", "year": "2001", "title": "The molecular biology of memory storage: a dialogue between genes and synapses (Нобелівська лекція)", "url": "https://doi.org/10.1126/science.1067020"}]};
+nodes.forEach(n=>{ if(_src[n.data.id]) n.data.sources = _src[n.data.id]; });
 AtlasMap.build({nodes, edges, catColor, catLabel});
 </script>
 </body>

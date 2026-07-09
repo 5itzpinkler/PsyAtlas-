@@ -63,6 +63,8 @@
   <div id="p-func"></div>
   <div class="label">Клінічне значення / статус</div>
   <div id="p-clin"></div>
+  <div class="label">Джерела</div>
+  <div id="p-sources"></div>
   <div class="xref" id="p-xref"></div>
 </div>
 
@@ -159,6 +161,8 @@ const catLabel = {substrate:'анатомічний субстрат',state:'с�
   process:'процес / феномен',stub:'вхід з іншого домену'};
 
 (()=>{ const n=nodes.find(x=>x.data.id==='dmn'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'depression',label:'Румінація при депресії'}]); } })();
+const _src = {"gnwt": [{"authors": "Dehaene, S. & Changeux, J.P.", "year": "2011", "title": "Experimental and theoretical approaches to conscious processing", "url": "https://doi.org/10.1016/j.neuron.2011.03.018"}], "iit": [{"authors": "Tononi, G.", "year": "2004", "title": "An information integration theory of consciousness", "url": "https://doi.org/10.1186/1471-2202-5-42"}], "hardProblem": [{"authors": "Chalmers, D.J.", "year": "1995", "title": "Facing up to the problem of consciousness", "url": "https://doi.org/10.1093/acprof:oso/9780195311105.001.0001"}], "hot": [{"authors": "Rosenthal, D.M.", "year": "2005", "title": "Consciousness and Mind", "url": ""}], "rpt": [{"authors": "Lamme, V.A.F.", "year": "2006", "title": "Towards a true neural stance on consciousness", "url": "https://doi.org/10.1016/j.tics.2006.09.001"}]};
+nodes.forEach(n=>{ if(_src[n.data.id]) n.data.sources = _src[n.data.id]; });
 AtlasMap.build({nodes, edges, catColor, catLabel, layout:{rankSep:150, nodeSep:62}});
 </script>
 </body>

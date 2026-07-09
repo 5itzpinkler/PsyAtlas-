@@ -62,6 +62,8 @@
   <div id="p-func"></div>
   <div class="label">Клінічне значення</div>
   <div id="p-clin"></div>
+  <div class="label">Джерела</div>
+  <div id="p-sources"></div>
   <div class="xref" id="p-xref"></div>
 </div>
 
@@ -161,6 +163,8 @@ const catLabel = {emotion:'система Панксеппа',hpa:'HPA-вісь'
 (()=>{ const n=nodes.find(x=>x.data.id==='seeking'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'depression',label:'Ангедонія при депресії'},{domain:'psychopathology',focus:'addiction',label:'Тяга при залежності'}]); } })();
 (()=>{ const n=nodes.find(x=>x.data.id==='cortisol'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'depression',label:'HPA-вісь при депресії'}]); } })();
 (()=>{ const n=nodes.find(x=>x.data.id==='allostasis'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'burnout',label:'Вигорання'}]); } })();
+const _src = {"seeking": [{"authors": "Panksepp, J.", "year": "1998", "title": "Affective Neuroscience: The Foundations of Human and Animal Emotions", "url": "https://doi.org/10.1093/acprof:oso/9780195096736.001.0001"}], "rage": [{"authors": "Panksepp, J.", "year": "1998", "title": "Affective Neuroscience: The Foundations of Human and Animal Emotions", "url": "https://doi.org/10.1093/acprof:oso/9780195096736.001.0001"}], "fear": [{"authors": "Panksepp, J.", "year": "1998", "title": "Affective Neuroscience: The Foundations of Human and Animal Emotions", "url": "https://doi.org/10.1093/acprof:oso/9780195096736.001.0001"}], "care": [{"authors": "Panksepp, J.", "year": "1998", "title": "Affective Neuroscience: The Foundations of Human and Animal Emotions", "url": "https://doi.org/10.1093/acprof:oso/9780195096736.001.0001"}], "panicGrief": [{"authors": "Panksepp, J.", "year": "1998", "title": "Affective Neuroscience: The Foundations of Human and Animal Emotions", "url": "https://doi.org/10.1093/acprof:oso/9780195096736.001.0001"}, {"authors": "Bowlby, J.", "year": "1969", "title": "Attachment and Loss, Vol. 1: Attachment", "url": ""}, {"authors": "Eisenberger, N.I., Lieberman, M.D. & Williams, K.D.", "year": "2003", "title": "Does rejection hurt? An fMRI study of social exclusion", "url": "https://doi.org/10.1126/science.1089134"}], "allostasis": [{"authors": "McEwen, B.S.", "year": "1998", "title": "Protective and damaging effects of stress mediators", "url": "https://doi.org/10.1056/NEJM199801153380307"}]};
+nodes.forEach(n=>{ if(_src[n.data.id]) n.data.sources = _src[n.data.id]; });
 AtlasMap.build({nodes, edges, catColor, catLabel});
 </script>
 </body>

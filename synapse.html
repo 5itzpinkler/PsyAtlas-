@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Синаптична нейротрансмісія</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="atlas-core.css">
+<script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+</head>
+<body>
+
+<div id="loading">Розкладаю граф…</div>
+
+<div id="top">
+  <a class="back" href="neuro_atlas_index.html">← Атлас</a>
+  <span class="tier-chip">Молекулярний рівень</span>
+  <h1>Синаптична нейротрансмісія</h1>
+  <input id="search" placeholder="Пошук молекули…">
+  <button class="zoombtn" onclick="AtlasMap.zoomBy(1.25)">+</button>
+  <button class="zoombtn" onclick="AtlasMap.zoomBy(0.8)">−</button>
+  <button class="zoombtn" onclick="AtlasMap.fit()" style="width:auto;padding:0 12px;font-size:12px;">⟲</button>
+</div>
+
+<div id="info">
+  <div class="panel-box" id="intro">
+    <svg width="200" height="118" viewBox="0 0 200 118">
+      <line x1="30" y1="20" x2="30" y2="98" stroke="#454b63" stroke-width="6" opacity="0.5"/>
+      <line x1="170" y1="20" x2="170" y2="98" stroke="#454b63" stroke-width="6" opacity="0.5"/>
+      <circle cx="70" cy="40" r="5" fill="#5fb583"/><circle cx="90" cy="55" r="5" fill="#5fb583"/>
+      <circle cx="60" cy="65" r="5" fill="#5fb583"/><circle cx="85" cy="78" r="5" fill="#5fb583"/>
+      <path d="M40,30 Q55,50 130,50" fill="none" stroke="#4a5070" stroke-width="1"/>
+      <circle cx="140" cy="50" r="8" fill="#4a9db0" opacity="0.6"/>
+      <text x="30" y="112" text-anchor="middle" font-size="8" fill="#8a90a8" font-family="Manrope">пре-</text>
+      <text x="170" y="112" text-anchor="middle" font-size="8" fill="#8a90a8" font-family="Manrope">пост-</text>
+    </svg>
+    <p>Синтез, викид, звʼязування й повернення чотирьох великих медіаторних систем. Кольори — стадії шляху; клік по вузлу відкриває деталі, клік по легенді фільтрує.</p>
+  </div>
+  <div class="panel-box" id="legend">
+    <div class="lg-title">Категорії · клік = фільтр</div>
+
+  </div>
+</div>
+
+<div id="panel">
+  <button class="close" onclick="AtlasMap.closePanel()">×</button>
+  <div class="badge" id="p-badge"></div>
+  <h3 id="p-name"></h3>
+  <div id="p-jump"></div>
+  <div class="label">Функція</div>
+  <div id="p-func"></div>
+  <div class="label">Клінічне значення</div>
+  <div id="p-clin"></div>
+  <div class="xref" id="p-xref"></div>
+</div>
+
+<div id="cy"></div>
+
+<script src="atlas-core.js"></script>
+<script>
+// Адаптер: старий позиційний формат N(id,label,cat,func,clin[,shape/stub])
+// приводимо до формату ядра N(id,label,cat,{func,clin,...}).
+const _N = (id,label,cat,a4,a5,a6)=>{
+  const o={};
+  if (typeof a4==='string'){ o.func=a4; if(a5) o.clin=a5; }
+  else if (a4 && typeof a4==='object'){ Object.assign(o,a4); }
+  // circuits/affect use N(id,label,cat,shape,func,clin): detect shape as 4th
+  if (typeof a4==='string' && ['ellipse','diamond','round-rectangle','hexagon'].includes(a4)){
+    o.shape=a4; o.func=a5; o.clin=a6;
+  }
+  return {data:Object.assign({id,label,cat},o)};
+};
+const N=_N;
+const E=(s,t,label)=>({data:{id:s+'_'+t+(label||''),source:s,target:t,label:label||''}});
+
+const nodes = [
+N('phe','Фенілаланін','sub','Незамінна амінокислота, вхідний субстрат синтезу катехоламінів.'),
+N('tyr','Тирозин','sub','Продукт гідроксилювання фенілаланіну (ФАГ), субстрат для TH.'),
+N('ldopa','L-ДОФА','sub','Проміжний продукт; єдина форма, що ефективно проходить ГЕБ.','L-ДОФА, а не сам дофамін, застосовується при хворобі Паркінсона — дофамін не проникає крізь гематоенцефалічний барʼєр.'),
+N('da','Дофамін','nt','Медіатор винагороди, мотивації та рухового контролю.','Дефіцит у нігростріарному шляху — рухові симптоми Паркінсона; надмірна мезолімбічна активність повʼязана з позитивними симптомами психозу.'),
+N('ne','Норадреналін','nt','Медіатор уваги, збудження і стресової реакції.','Мішень інгібіторів зворотного захоплення норадреналіну при СДУГ і депресії.'),
+N('epi','Адреналін','nt','Гормон/медіатор гострої стрес-реакції, переважно на периферії.'),
+N('dopac','ДОФАК','metab','Внутрішньоклітинний метаболіт дофаміну.'),
+N('threemt','3-МТ','metab','Позаклітинний метаболіт дофаміну через COMT.'),
+N('hva','Гомованілінова кислота','metab','Кінцевий метаболіт дофаміну.','Концентрація HVA в лікворі історично використовувалась як маркер обміну дофаміну.'),
+N('normet','Норметанефрин','metab','Метаболіт норадреналіну через COMT.'),
+N('vma','Ванілілмигдалева кислота','metab','Кінцевий метаболіт норадреналіну й адреналіну.','VMA в добовій сечі — класичний скринінговий маркер феохромоцитоми.'),
+N('d1','D1-подібні (D1, D5)','receptor','Метаботропні, Gs-звʼязані, підвищують цАМФ.'),
+N('d2','D2-подібні (D2-D4)','receptor','Метаботропні, Gi-звʼязані, знижують цАМФ.','Блокада D2 — основний механізм дії антипсихотиків.'),
+N('alpha1','α1-адренорецептор','receptor','Метаботропний, Gq-звʼязаний.'),
+N('beta','β-адренорецептор','receptor','Метаботропний, Gs-звʼязаний.','β-блокатори знижують соматичні прояви тривоги.'),
+N('trp','Триптофан','sub','Незамінна амінокислота, попередник серотоніну.'),
+N('fivehtp','5-Гідрокситриптофан','sub','Проміжний продукт синтезу серотоніну.','TPH2 — лімітуючий фермент; поліморфізми повʼязують з вразливістю до депресії.'),
+N('ser','Серотонін (5-HT)','nt','Регуляція настрою, сну, апетиту, імпульсивності.'),
+N('nas','N-ацетилсеротонін','sub','Проміжний продукт на шляху до мелатоніну.'),
+N('mel','Мелатонін','nt','Гормон циркадного ритму.','Синтез мелатоніну з серотоніну — місток між настроєм і циркадними ритмами.'),
+N('fivehial','5-Гідроксііндолацетальдегід','metab','Проміжний продукт деградації серотоніну.'),
+N('fivehiaa','5-ГІОК','metab','Кінцевий метаболіт серотоніну.','Знижений рівень корелює з імпульсивною агресією в класичних дослідженнях.'),
+N('ht1a','5-HT1A','receptor','Gi-звʼязаний, частково ауторецептор.','Ключова мішень буспірону при тривозі.'),
+N('ht2a','5-HT2A','receptor','Gq-звʼязаний.','Мішень психоделіків і атипових антипсихотиків.'),
+N('ht3','5-HT3','receptor','Єдиний іонотропний серотоніновий рецептор.','Мішень протиблювотних (ондансетрон).'),
+N('gln','Глутамін','sub','Циклується з глутаматом у гліально-нейрональному циклі.'),
+N('glu','Глутамат','nt','Головний збуджуючий медіатор ЦНС.','Надмірна активація NMDA — ексайтотоксичність при інсульті.'),
+N('gaba','ГАМК','nt','Головний гальмівний медіатор ЦНС.','GAD — мішень аутоантитіл при stiff-person syndrome.'),
+N('ssa','Бурштиновий напівальдегід','sub','Проміжний продукт деградації ГАМК.'),
+N('succ','Сукцинат (цикл Кребса)','metab','ГАМК метаболічно замикається назад у цикл Кребса.','Рідкісний приклад медіатора, що напряму повертається в енергетичний метаболізм.'),
+N('nmda','NMDA-рецептор','receptor','Іонотропний; потребує глутамату і деполяризації одночасно.','Молекулярна основа LTP і синаптичного навчання.'),
+N('ampa','AMPA-рецептор','receptor','Іонотропний, швидка збуджуюча передача.','Вставка нових AMPA-рецепторів — ключовий механізм LTP.'),
+N('mglur','Метаботропний mGluR','receptor','Gq-звʼязаний, повільніший за іонотропні.'),
+N('gabaa','GABA-A','receptor','Іонотропний, Cl--канал.','Мішень бензодіазепінів, барбітуратів, алкоголю.'),
+N('gabab','GABA-B','receptor','Метаботропний, Gi-звʼязаний.','Мішень баклофену при спастичності.'),
+N('cho','Холін','sub','Попередник ацетилхоліну.'),
+N('accoa','Ацетил-КоА','sub','Другий субстрат синтезу ацетилхоліну.'),
+N('ach','Ацетилхолін','nt','Медіатор навчання, уваги і нервово-мʼязової передачі.','Дефіцит холінергічних нейронів — ключова ланка при Альцгеймері.'),
+N('cho2','Холін (реутилізація)','sub','Повертається в термінал для повторного синтезу.'),
+N('acetate','Ацетат','metab','Побічний продукт гідролізу ацетилхоліну.'),
+N('nach','Нікотиновий рецептор','receptor','Іонотропний катіонний канал.','Мішень нікотину; в нервово-мʼязовому синапсі — мішень міорелаксантів.'),
+N('mach','Мускариновий рецептор','receptor','Метаботропний, підтипи M1-M5.','M1 (гіпокамп) — Gq; M2 (серце) — Gi.'),
+N('gs','Gs-білок','messenger','Активує аденілатциклазу.'),
+N('gi','Gi-білок','messenger','Інгібує аденілатциклазу.'),
+N('gq','Gq-білок','messenger','Активує фосфоліпазу C.'),
+N('ac','Аденілатциклаза','messenger','Синтезує цАМФ з АТФ.'),
+N('camp','цАМФ','messenger','Універсальний другий посередник.','Точка сходження сигналів десятків рецепторів; мішень інгібіторів фосфодіестерази.'),
+N('pka','Протеїнкіназа А','messenger','Фосфорилює білки-мішені, зокрема CREB.','Каскад цАМФ-PKA-CREB — основа консолідації довготривалої памʼяті.'),
+N('plc','Фосфоліпаза C','messenger','Розщеплює PIP2 на IP3 і ДАГ.'),
+N('ip3dag','IP3 / ДАГ','messenger','IP3 вивільняє Ca2+; ДАГ активує ПКC.'),
+N('pkc','Протеїнкіназа C','messenger','Регулює синаптичну пластичність.'),
+N('ionflux','Іонний потік','ion','Пряма зміна мембранного потенціалу без посередників.','Іонотропна передача діє за мілісекунди — набагато швидше за метаботропні каскади.'),
+N('vtransport','Везикулярне завантаження','transporter','Специфічні транспортери упаковують медіатор у везикулу.','VMAT2, VGAT, VGLUT, VAChT — різні білки, один принцип.'),
+N('dock','Докінг/прайминг (SNARE)','vesicle','Везикула закріплюється біля активної зони мембрани.'),
+N('ca2','Ca2+-тригер','ion','Вхід кальцію запускає злиття мембран.'),
+N('exo','Екзоцитоз','vesicle','Викид медіатора в синаптичну щілину.'),
+N('reuptake','Зворотне захоплення','transporter','Транспортери повертають медіатор у термінал.','DAT, SERT, GAT, ChT — мішені більшості психофармпрепаратів; СІЗЗС блокують SERT.')
+];
+
+const edges = [
+E('phe','tyr','ФАГ'),E('tyr','ldopa','TH'),E('ldopa','da','AADC'),E('da','ne','DBH'),E('ne','epi','PNMT'),
+E('da','dopac','MAO'),E('dopac','hva','COMT'),E('da','threemt','COMT'),E('threemt','hva','MAO'),
+E('ne','normet','COMT'),E('normet','vma','MAO'),
+E('da','d1'),E('da','d2'),E('ne','alpha1'),E('ne','beta'),E('epi','beta'),
+E('trp','fivehtp','TPH2'),E('fivehtp','ser','AADC'),E('ser','nas','AANAT'),E('nas','mel','ASMT'),
+E('ser','fivehial','MAO'),E('fivehial','fivehiaa','ALDH'),
+E('ser','ht1a'),E('ser','ht2a'),E('ser','ht3'),
+E('gln','glu','GLS'),E('glu','gaba','GAD'),E('gaba','ssa','GABA-T'),E('ssa','succ','SSADH'),
+E('glu','nmda'),E('glu','ampa'),E('glu','mglur'),E('gaba','gabaa'),E('gaba','gabab'),
+E('cho','ach','ChAT'),E('accoa','ach','ChAT'),E('ach','cho2','AChE'),E('ach','acetate','AChE'),
+E('ach','nach'),E('ach','mach'),
+E('d1','gs'),E('beta','gs'),E('d2','gi'),E('alpha1','gq'),E('ht1a','gi'),E('ht2a','gq'),
+E('mglur','gq'),E('gabab','gi'),E('mach','gq'),
+E('gs','ac'),E('ac','camp'),E('camp','pka'),
+E('gq','plc'),E('plc','ip3dag'),E('ip3dag','pkc'),
+E('nmda','ionflux'),E('ampa','ionflux'),E('gabaa','ionflux'),E('ht3','ionflux'),E('nach','ionflux'),
+E('da','vtransport'),E('ser','vtransport'),E('gaba','vtransport'),E('glu','vtransport'),E('ach','vtransport'),
+E('vtransport','dock'),E('dock','ca2'),E('ca2','exo'),E('exo','reuptake')
+];
+
+const catColor = {sub:'#7d8399',nt:'#5fb583',metab:'#c97a63',receptor:'#4a9db0',
+  messenger:'#9b87c4',transporter:'#d9a94f',ion:'#6b9fd6',vesicle:'#c986ab'};
+const catLabel = {sub:'попередник',nt:'нейромедіатор',metab:'метаболіт',receptor:'рецептор',
+  messenger:'другий посередник',transporter:'транспортер',ion:'іонний потік',vesicle:'везикулярний цикл'};
+
+(()=>{ const n=nodes.find(x=>x.data.id==='ser'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'depression',label:'Роль у депресії'}]); } })();
+AtlasMap.build({nodes, edges, catColor, catLabel});
+</script>
+</body>
+</html>

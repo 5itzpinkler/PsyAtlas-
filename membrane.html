@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мембрана і потенціал дії</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="atlas-core.css">
+<script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+</head>
+<body>
+
+<div id="loading">Розкладаю граф…</div>
+
+<div id="top">
+  <a class="back" href="neuro_atlas_index.html">← Атлас</a>
+  <span class="tier-chip">Клітинний рівень</span>
+  <h1>Мембрана і потенціал дії</h1>
+  <input id="search" placeholder="Пошук…">
+  <button class="zoombtn" onclick="AtlasMap.zoomBy(1.25)">+</button>
+  <button class="zoombtn" onclick="AtlasMap.zoomBy(0.8)">−</button>
+  <button class="zoombtn" onclick="AtlasMap.fit()" style="width:auto;padding:0 12px;font-size:12px;">⟲</button>
+</div>
+
+<div id="info">
+  <div class="panel-box" id="intro">
+    <svg width="200" height="118" viewBox="0 0 200 118">
+      <line x1="20" y1="59" x2="180" y2="59" stroke="#454b63" stroke-width="8" opacity="0.4"/>
+      <path d="M30,59 L60,59 L70,20 L85,95 L100,40 L112,59 L180,59" fill="none" stroke="#5fb583" stroke-width="1.6"/>
+      <text x="85" y="15" text-anchor="middle" font-size="8" fill="#5fb583" font-family="Manrope">+40 мВ</text>
+      <text x="40" y="75" text-anchor="middle" font-size="8" fill="#8a90a8" font-family="Manrope">−70 мВ</text>
+    </svg>
+    <p>Від потенціалу спокою до потенціалу дії й далі — до молекулярного механізму LTP/LTD, що лежить в основі памʼяті. Форма кривої вгорі — сам потенціал дії.</p>
+  </div>
+  <div class="panel-box" id="legend">
+    <div class="lg-title">Категорії · клік = фільтр</div>
+
+  </div>
+</div>
+
+<div id="panel">
+  <button class="close" onclick="AtlasMap.closePanel()">×</button>
+  <div class="badge" id="p-badge"></div>
+  <h3 id="p-name"></h3>
+  <div id="p-jump"></div>
+  <div class="label">Функція</div>
+  <div id="p-func"></div>
+  <div class="label">Клінічне значення</div>
+  <div id="p-clin"></div>
+  <div class="xref" id="p-xref"></div>
+</div>
+
+<div id="cy"></div>
+
+<script src="atlas-core.js"></script>
+<script>
+// Адаптер: старий позиційний формат N(id,label,cat,func,clin[,shape/stub])
+// приводимо до формату ядра N(id,label,cat,{func,clin,...}).
+const _N = (id,label,cat,a4,a5,a6)=>{
+  const o={};
+  if (typeof a4==='string'){ o.func=a4; if(a5) o.clin=a5; }
+  else if (a4 && typeof a4==='object'){ Object.assign(o,a4); }
+  // circuits/affect use N(id,label,cat,shape,func,clin): detect shape as 4th
+  if (typeof a4==='string' && ['ellipse','diamond','round-rectangle','hexagon'].includes(a4)){
+    o.shape=a4; o.func=a5; o.clin=a6;
+  }
+  return {data:Object.assign({id,label,cat},o)};
+};
+const N=_N;
+const E=(s,t,label)=>({data:{id:s+'_'+t+(label||''),source:s,target:t,label:label||''}});
+
+const nodes = [
+N('naK','Na+/K+-АТФаза','pump','Викачує 3 Na+ назовні й заносить 2 K+ всередину за рахунок АТФ.','Мішень серцевих глікозидів (дигоксин).'),
+N('kleak','K+ витікаючі канали','channel','Постійно відкриті канали — головна причина негативного потенціалу спокою.'),
+N('naOut','Na+ (позаклітинно висока)','ion','Концентрація Na+ ззовні клітини набагато вища, ніж всередині.'),
+N('kIn','K+ (внутрішньоклітинно висока)','ion','Концентрація K+ всередині клітини набагато вища, ніж ззовні.'),
+N('rmp','Потенціал спокою (−70 мВ)','potential','Різниця заряду в стані спокою, підтримується асиметричним розподілом іонів.'),
+N('threshold','Поріг збудження (~−55 мВ)','potential','Після досягнення запускається неконтрольована деполяризація "все або нічого".'),
+N('navGate','Потенціал-залежний Na+-канал','channel','Відкривається при деполяризації, впускає Na+ всередину.','Мішень місцевих анестетиків і карбамазепіну.'),
+N('depol','Деполяризація (пік ~+40 мВ)','potential','Швидкий вхід Na+ змінює заряд мембрани на позитивний.'),
+N('kvGate','Потенціал-залежний K+-канал','channel','Відкривається з затримкою, K+ виходить, повертаючи заряд до негативного.'),
+N('repol','Реполяризація','potential','Вихід K+ повертає мембранний потенціал у бік негативних значень.'),
+N('hyperpol','Гіперполяризація (undershoot)','potential','Короткочасне перевищення негативності через затримку закриття K+-каналів.'),
+N('refract','Рефрактерний період','potential','Проміжок, коли новий потенціал дії неможливий або утруднений.','Задає верхню межу частоти імпульсації нейрона.'),
+N('myelin','Мієлінова оболонка','structure','Ізолююча оболонка з олігодендроцитів або шваннівських клітин.','Демієлінізація при розсіяному склерозі сповільнює проведення.'),
+N('ranvier','Перехоплення Ранвʼє','structure','Ділянка аксона без мієліну з високою густиною Na+-каналів.'),
+N('saltatory','Сальтаторне проведення','potential','Імпульс "перестрибує" між перехопленнями — набагато швидше за безперервне.'),
+N('epsp','Збуджуючий постсинаптичний потенціал','potential','Локальна деполяризація від збуджуючих іонотропних рецепторів.'),
+N('ipsp','Гальмівний постсинаптичний потенціал','potential','Локальна гіперполяризація від гальмівних каналів.'),
+N('summation','Просторова і часова сумація','potential','Інтеграція багатьох ЗПСП і ГПСП визначає, чи буде досягнутий поріг.','Тут відбувається обчислювальна робота нейрона.'),
+N('axonHillock','Аксонний горбик','structure','Найвища густина Na+-каналів — місце ініціації потенціалу дії.'),
+N('ca2in','Вхід Ca2+ через NMDA','ion','Кальцій входить лише коли глутамат звʼязаний і мембрана деполяризована.','Детектор збігу — молекулярна основа асоціативного навчання.'),
+N('camkII','CaMKII','molecule','Кіназа, що активується Ca2+/кальмодуліном; молекулярний перемикач LTP.','Може залишатись активною й після зникнення початкового сигналу.'),
+N('ampaInsert','Вставка нових AMPA-рецепторів','plasticity','CaMKII запускає транспорт додаткових AMPA-рецепторів у мембрану.'),
+N('ltp','Довготривала потенціація (LTP)','plasticity','Стійке посилення синаптичної передачі.','Провідна клітинна модель синаптичної основи навчання і памʼяті.'),
+N('ltd','Довготривала депресія (LTD)','plasticity','Стійке ослаблення синапсу після низькочастотної стимуляції.','Без ослаблення невикористовуваних синапсів мережа втрачає вибірковість.'),
+N('creb','CREB (транскрипційний фактор)','molecule','Запускає синтез нових білків для довготривалої памʼяті.','Перехід короткочасної памʼяті в довготривалу вимагає синтезу білка (Kandel, Aplysia).'),
+N('spine','Дендритний шипик','structure','Структурний виступ дендрита, де відбувається більшість збуджуючих синапсів.','Морфологічні зміни шипиків — фізичний субстрат памʼяті.'),
+N('nsc','Нейральні стовбурові клітини','molecule','Мультипотентні клітини, здатні диференціюватись у нейрони й глію.'),
+N('neurogenesis','Дорослий нейрогенез','plasticity','Утворення нових нейронів у зубчастій звивині гіпокампа протягом життя.','Стрес пригнічує, а СІЗЗС і фізична активність стимулюють — одна з гіпотез механізму антидепресантів.')
+];
+
+const edges = [
+E('naK','naOut'),E('naK','kIn'),E('kleak','kIn'),E('naOut','rmp'),E('kIn','rmp'),E('kleak','rmp'),
+E('rmp','threshold'),E('threshold','navGate'),E('navGate','depol'),E('depol','kvGate'),E('kvGate','repol'),
+E('repol','hyperpol'),E('hyperpol','refract'),E('refract','naK','відновлення'),
+E('navGate','ranvier'),E('myelin','ranvier'),E('ranvier','saltatory'),
+E('epsp','summation'),E('ipsp','summation'),E('summation','axonHillock'),E('axonHillock','threshold','якщо поріг досягнуто'),
+E('epsp','ca2in','через NMDA'),E('ca2in','camkII'),E('camkII','ampaInsert'),E('ampaInsert','ltp'),
+E('camkII','creb'),E('creb','spine','синтез білка'),E('ltp','spine'),
+E('ca2in','ltd','низький Ca2+'),E('ltd','spine'),
+E('nsc','neurogenesis')
+];
+
+const catColor = {ion:'#6b9fd6',channel:'#4a9db0',pump:'#d9a94f',potential:'#5fb583',
+  molecule:'#7d8399',plasticity:'#c986ab',structure:'#c97a63'};
+const catLabel = {ion:'іон',channel:'канал/рецептор',pump:'насос/транспортер',potential:'стан потенціалу',
+  molecule:'внутрішньоклітинна молекула',plasticity:'пластичність',structure:'структура'};
+
+
+// Крос-навігація: клітинні механізми → суміжні домени
+const _xr = {
+  ca2in:[{domain:'synapse',focus:'nmda',label:'NMDA-рецептор у синаптичному домені'}],
+  ltp:[{domain:'cognition',focus:'declarative',label:'Декларативна памʼять'},{domain:'circuits',focus:'hippo',label:'Гіпокамп'}],
+  creb:[{domain:'cognition',focus:'consolidation',label:'Консолідація памʼяті'}],
+  neurogenesis:[{domain:'affect',focus:'cortisol',label:'Кортизол пригнічує нейрогенез'}]
+};
+nodes.forEach(n=>{ if(_xr[n.data.id]) n.data.xref=_xr[n.data.id]; });
+AtlasMap.build({nodes, edges, catColor, catLabel});
+</script>
+</body>
+</html>

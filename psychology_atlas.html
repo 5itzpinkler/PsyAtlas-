@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Атлас психологічних теорій</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#11131c;
+  --bg-grid:#181b28;
+  --territory:#1b1e2c;
+  --territory-border:#33374a;
+  --card:#232739;
+  --card-border:#3a3f56;
+  --text:#ede8dd;
+  --text-dim:#9aa0b4;
+  --text-faint:#666b80;
+  --gold:#b08b4f;
+  --green:#5da97e;
+  --green-dim:#3a6b52;
+  --amber:#d1a75a;
+  --amber-dim:#8a6f3c;
+  --coral:#c1715a;
+  --coral-dim:#7d4a3c;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;height:100%;background:var(--bg);overflow:hidden;font-family:'Manrope',sans-serif;}
+#viewport{position:relative;width:100vw;height:100vh;overflow:hidden;cursor:grab;background:
+  radial-gradient(circle at 20% 20%, #161927 0%, var(--bg) 60%);}
+#viewport.dragging{cursor:grabbing;}
+#canvas{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform;}
+.grid{display:grid;grid-template-columns:repeat(5,480px);gap:44px;padding:80px;position:relative;z-index:2;}
+.territory{background:var(--territory);border:1px solid var(--territory-border);border-radius:18px;padding:22px;position:relative;}
+.territory::before{content:attr(data-tag);position:absolute;top:-11px;left:20px;background:var(--bg);padding:0 10px;
+  font-family:'Manrope';font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);font-weight:600;}
+.territory h2{font-family:'Fraunces',serif;font-weight:500;font-size:21px;color:var(--text);margin:6px 0 4px;}
+.territory .sub{font-size:12px;color:var(--text-dim);margin:0 0 16px;line-height:1.5;}
+.nodes{display:flex;flex-wrap:wrap;gap:10px;}
+.node{width:212px;background:var(--card);border:1px solid var(--card-border);border-radius:10px;padding:10px 12px;
+  cursor:pointer;transition:border-color .15s, transform .15s, opacity .2s;}
+.node:hover{border-color:var(--gold);transform:translateY(-2px);}
+.node.dim{opacity:0.18;}
+.node.active{border-color:var(--gold);border-width:1.5px;}
+.node-top{display:flex;align-items:center;gap:7px;margin-bottom:3px;}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dot.green{background:var(--green);}
+.dot.amber{background:var(--amber);}
+.dot.coral{background:var(--coral);}
+.node-name{font-family:'Fraunces',serif;font-size:14.5px;color:var(--text);font-weight:500;}
+.node-fig{font-size:11px;color:var(--text-dim);margin-left:15px;}
+svg#connections{position:absolute;top:0;left:0;pointer-events:none;z-index:1;overflow:visible;}
+svg#connections path{fill:none;stroke:var(--gold);stroke-width:1;stroke-dasharray:2 4;opacity:0.35;}
+
+#toolbar{position:fixed;top:20px;left:20px;z-index:10;display:flex;gap:10px;align-items:center;}
+#search{background:var(--card);border:1px solid var(--card-border);color:var(--text);border-radius:8px;
+  padding:10px 14px;font-family:'Manrope';font-size:13px;width:230px;outline:none;}
+#search::placeholder{color:var(--text-faint);}
+#search:focus{border-color:var(--gold);}
+.zoombtn{background:var(--card);border:1px solid var(--card-border);color:var(--text);border-radius:8px;
+  width:36px;height:36px;font-size:16px;cursor:pointer;font-family:'Manrope';}
+.zoombtn:hover{border-color:var(--gold);}
+
+#legend{position:fixed;bottom:20px;left:20px;z-index:10;background:var(--card);border:1px solid var(--card-border);
+  border-radius:10px;padding:14px 16px;font-size:12px;color:var(--text-dim);}
+#legend .row{display:flex;align-items:center;gap:8px;margin:5px 0;cursor:pointer;}
+#legend .title{font-family:'Fraunces',serif;font-size:13px;color:var(--text);margin-bottom:8px;font-weight:500;}
+
+#panel{position:fixed;top:0;right:-380px;width:360px;height:100%;background:var(--territory);
+  border-left:1px solid var(--territory-border);z-index:20;transition:right .25s ease;padding:32px 28px;overflow-y:auto;}
+#panel.open{right:0;}
+#panel .close{position:absolute;top:22px;right:22px;background:none;border:none;color:var(--text-dim);
+  font-size:20px;cursor:pointer;}
+#panel .badge{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;margin-bottom:14px;font-weight:600;}
+#panel .badge.green{background:rgba(93,169,126,.15);color:var(--green);}
+#panel .badge.amber{background:rgba(209,167,90,.15);color:var(--amber);}
+#panel .badge.coral{background:rgba(193,113,90,.15);color:var(--coral);}
+#panel h3{font-family:'Fraunces',serif;font-size:26px;color:var(--text);margin:0 0 4px;font-weight:500;}
+#panel .figures{font-size:13px;color:var(--gold);margin-bottom:20px;}
+#panel .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);margin:18px 0 6px;}
+#panel p{font-size:14px;line-height:1.6;color:var(--text-dim);margin:0;}
+
+#hint{position:fixed;bottom:20px;right:20px;z-index:10;font-size:11px;color:var(--text-faint);text-align:right;
+  font-family:'Manrope';line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <input id="search" placeholder="Пошук теорії або автора...">
+  <button class="zoombtn" onclick="zoomBy(1.2)">+</button>
+  <button class="zoombtn" onclick="zoomBy(0.8)">−</button>
+  <button class="zoombtn" onclick="resetView()" style="width:auto;padding:0 12px;font-size:12px;">⟲</button>
+</div>
+
+<div id="legend">
+  <div class="title">Строгість теорії</div>
+  <div class="row" onclick="filterRigor('green')"><span class="dot green"></span>формалізована, висока емпірична база</div>
+  <div class="row" onclick="filterRigor('amber')"><span class="dot amber"></span>валідна, менш формалізована</div>
+  <div class="row" onclick="filterRigor('coral')"><span class="dot coral"></span>історична спадщина, слабша строгість</div>
+</div>
+
+<div id="hint">Тягни щоб пересуватись · колесо миші щоб зумити<br>клікни вузол для деталей</div>
+
+<div id="panel">
+  <button class="close" onclick="closePanel()">×</button>
+  <div class="badge" id="p-badge">строгість</div>
+  <h3 id="p-name"></h3>
+  <div class="figures" id="p-figures"></div>
+  <div class="label">Ключова теза</div>
+  <p id="p-claim"></p>
+  <div class="label">Слабке місце / критика</div>
+  <p id="p-critique"></p>
+</div>
+
+<div id="viewport">
+  <div id="canvas">
+    <svg id="connections"></svg>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+{tag:"Школа", name:"Психодинамічна традиція", sub:"Несвідоме, внутрішні конфлікти, ранній досвід", nodes:[
+  {id:"freud", name:"Класичний психоаналіз", fig:"Фройд", rigor:"coral", claim:"Поведінка керується несвідомими драйвами і конфліктами, витісненими з дитинства.", critique:"Ненаукова методологія: гіпотези практично не фальсифікуються, клінічні кейси не відтворюються."},
+  {id:"jung", name:"Аналітична психологія", fig:"Юнг", rigor:"coral", claim:"Психіка містить колективне несвідоме з архетипами, спільними для всього людства.", critique:"Архетипи не мають операційного визначення й не піддаються прямій емпіричній перевірці."},
+  {id:"adler", name:"Індивідуальна психологія", fig:"Адлер", rigor:"coral", claim:"Головна рушійна сила — компенсація почуття неповноцінності через прагнення до переваги.", critique:"Модель надто загальна, пояснює постфактум майже будь-яку поведінку однаково добре."},
+  {id:"objrel", name:"Обʼєктні відносини", fig:"Кляйн, Вінникот", rigor:"amber", claim:"Особистість формується через інтерналізацію ранніх стосунків зі значущими іншими.", critique:"Клінічно багата, але спирається переважно на case-study, слабко формалізована."},
+  {id:"attach", name:"Привʼязаність і ментaлізація", fig:"Боулбі, Фонагі", rigor:"green", claim:"Стиль звʼязку з опікуном у дитинстві формує стратегії регуляції афекту й довіри дорослого.", critique:"Стилі привʼязаності менш стабільні протягом життя, ніж початково стверджувалось."}
+]},
+{tag:"Школа", name:"Біхевіоризм", sub:"Спостережувана поведінка, научання через підкріплення", nodes:[
+  {id:"pavlov", name:"Класичне обумовлення", fig:"Павлов", rigor:"green", claim:"Нейтральний стимул набуває реакції через повторне поєднання з безумовним стимулом.", critique:"Пояснює прості асоціативні реакції, але не складну цілеспрямовану поведінку."},
+  {id:"skinner", name:"Оперантне обумовлення", fig:"Скіннер", rigor:"green", claim:"Поведінка закріплюється або згасає залежно від наслідків, які вона викликає.", critique:"Свідомо ігнорує внутрішні когнітивні процеси як обʼєкт вивчення."},
+  {id:"bandura", name:"Соціальне научання", fig:"Бандура", rigor:"green", claim:"Люди навчаються через спостереження за іншими, без прямого підкріплення.", critique:"Місток до когнітивізму — сам Бандура згодом визнав недостатність чистого біхевіоризму."}
+]},
+{tag:"Школа", name:"Когнітивна традиція", sub:"Мислення як обробка інформації", nodes:[
+  {id:"piaget", name:"Стадії когнітивного розвитку", fig:"Піаже", rigor:"coral", claim:"Дитина проходить чіткі універсальні стадії побудови логічних схем мислення.", critique:"Точні вікові межі стадій не підтвердились крос-культурно; діти здатні на більше раніше."},
+  {id:"beck", name:"Когнітивна модель / КПТ", fig:"Бек", rigor:"green", claim:"Емоційні розлади підтримуються викривленими автоматичними думками і схемами.", critique:"Сильна для симптомів, слабша у поясненні глибинних причин розладу."},
+  {id:"ellis", name:"Раціонально-емоційна терапія", fig:"Елліс", rigor:"amber", claim:"Не подія, а ірраціональне переконання про подію викликає страждання.", critique:"Клінічно ефективна, але теоретичний апарат менш операціоналізований, ніж у Бека."},
+  {id:"kahneman", name:"Евристики і упередження", fig:"Канеман, Тверскі", rigor:"green", claim:"Мислення працює через дві системи: швидку інтуїтивну і повільну аналітичну.", critique:"Частина класичних ефектів (напр. деякі прайминг-ефекти) не відтворилась у replication-хвилі."},
+  {id:"neisser", name:"Обробка інформації", fig:"Найссер", rigor:"amber", claim:"Пізнання можна моделювати як послідовність етапів обробки сигналу, як у компʼютері.", critique:"Метафора компʼютера погано описує паралельність і контекстність реального мозку."}
+]},
+{tag:"Школа", name:"Гуманістично-екзистенційна", sub:"Смисл, самоактуалізація, субʼєктивний досвід", nodes:[
+  {id:"rogers", name:"Клієнт-центрований підхід", fig:"Роджерс", rigor:"amber", claim:"Особистісне зростання відбувається в умовах безумовного прийняття й емпатії.", critique:"Ключові конструкти (конгруентність, самоактуалізація) важко операціоналізувати кількісно."},
+  {id:"maslow", name:"Ієрархія потреб", fig:"Маслоу", rigor:"coral", claim:"Потреби організовані в жорстку піраміду від базових до потреби самоактуалізації.", critique:"Емпіричні дослідження не підтверджують жорсткого послідовного порядку задоволення потреб."},
+  {id:"frankl", name:"Логотерапія", fig:"Франкл", rigor:"coral", claim:"Головна рушійна сила людини — пошук смислу, а не задоволення чи влада.", critique:"Філософськи потужна, але важко піддається строгій експериментальній перевірці."},
+  {id:"perls", name:"Гештальт-терапія", fig:"Перлз", rigor:"coral", claim:"Зцілення відбувається через усвідомлення цілісного досвіду тут-і-зараз.", critique:"Слабка теоретична база, ефективність підтверджена радше клінічно, ніж експериментально."}
+]},
+{tag:"Школа", name:"Культурно-діяльнісна школа", sub:"Свідомість як продукт опосередкованої знаком діяльності", nodes:[
+  {id:"vygotsky", name:"Культурно-історична теорія", fig:"Виготський", rigor:"amber", claim:"Вищі психічні функції виникають через інтеріоризацію знаків у соціальній взаємодії.", critique:"Багато ключових понять (зона найближчого розвитку) описові, а не формалізовані математично."},
+  {id:"luria", name:"Нейропсихологія", fig:"Лурія", rigor:"green", claim:"Психічні функції спираються на динамічні системи мозкових зон, а не локальні центри.", critique:"Метод синдромного аналізу потужний клінічно, але важко стандартизувати між дослідниками."},
+  {id:"leontiev", name:"Теорія діяльності", fig:"Леонтьєв", rigor:"amber", claim:"Мотив народжується через зсув на предмет діяльності — потреба стає конкретним мотивом.", critique:"Не пояснює, чому субʼєкт взагалі ініціює рух до предмета без вродженого двигуна."}
+]},
+{tag:"Рівень", name:"Афективна й обчислювальна нейронаука", sub:"Мозковий субстрат емоцій, сприйняття і дії", nodes:[
+  {id:"panksepp", name:"Афективні нейроконтури", fig:"Панксепп", rigor:"amber", claim:"Існує сім базових емоційних систем, спільних для всіх ссавців, локалізованих підкірково.", critique:"Переважно тваринні моделі; перенесення таксономії емоцій на людину лишається дискусійним."},
+  {id:"friston", name:"Активний висновок", fig:"Фрістон", rigor:"green", claim:"Мозок мінімізує вільну енергію, одночасно пояснюючи сприйняття, дію і научання.", critique:"Математично елегантна, але надзвичайно складна для прямої емпіричної перевірки in vivo."},
+  {id:"damasio", name:"Соматичні маркери", fig:"Дамазіо", rigor:"amber", claim:"Рішення спираються на тілесні емоційні сигнали, а не лише на чисту логіку.", critique:"Гіпотеза соматичних маркерів отримала змішану підтримку в повторних дослідженнях."},
+  {id:"ledoux", name:"Нейросхеми страху", fig:"Ле Ду", rigor:"green", claim:"Страх обробляється швидким підкірковим шляхом до мигдалини, минаючи свідому оцінку.", critique:"Сам Ле Ду згодом розділив 'страх' як відчуття і захисну поведінкову реакцію — початкова модель спрощена."}
+]},
+{tag:"Рівень", name:"Мотивація і розвиток", sub:"Що рухає людину і як змінюється структура самої особистості", nodes:[
+  {id:"sdt", name:"Теорія самодетермінації", fig:"Десі, Раян", rigor:"green", claim:"Три вроджені психологічні потреби — автономія, компетентність, звʼязок — рушій мотивації.", critique:"Універсальність потреб крос-культурно підтверджена, але вага кожної потреби варіюється."},
+  {id:"erikson", name:"Психосоціальні стадії", fig:"Еріксон", rigor:"amber", claim:"Особистість проходить вісім криз протягом усього життя, а не лише в дитинстві.", critique:"Стадії описові й лінійні, слабко верифіковані лонгітюдними дослідженнями."},
+  {id:"kegan", name:"Конструктивно-розвиткова теорія", fig:"Кіган", rigor:"amber", claim:"Дорослий розвивається через ускладнення того, субʼєктом чого він є, а що може оцінювати.", critique:"Оцінка стадії вимагає трудомісткого якісного інтервʼю, погано масштабується."},
+  {id:"loevinger", name:"Розвиток его", fig:"Ловінджер", rigor:"amber", claim:"Его проходить стадії ускладнення від імпульсивного до автономного й інтегрованого.", critique:"Сильно корелює з віком та освітою, важко відділити від загального когнітивного розвитку."}
+]},
+{tag:"Рівень", name:"Системний і соціальний", sub:"Особистість всередині мереж і контекстів", nodes:[
+  {id:"bronfenbrenner", name:"Екологічні системи", fig:"Бронфенбреннер", rigor:"green", claim:"Розвиток формується вкладеними системами — від сімʼї до культури й політики.", critique:"Модель радше описова структура, ніж перевіряваний причинний механізм."},
+  {id:"familysys", name:"Сімейні системи", fig:"Боуен, Мінухін", rigor:"amber", claim:"Симптом одного члена родини часто підтримує баланс усієї сімейної системи.", critique:"Спирається переважно на клінічні спостереження, важко контрольовано перевірити."},
+  {id:"tajfel", name:"Теорія соціальної ідентичності", fig:"Теджфел", rigor:"green", claim:"Люди категоризують себе й інших у групи, що впливає на самооцінку й упередження.", critique:"Класичні лабораторні ефекти сильні, але перенесення на реальні конфлікти складніше."},
+  {id:"mead", name:"Символічний інтеракціонізм", fig:"Мід", rigor:"amber", claim:"Самість формується через прийняття ролі й уявну реакцію узагальненого іншого.", critique:"Якісна соціологічна традиція, важко піддається кількісній перевірці гіпотез."}
+]},
+{tag:"Рівень", name:"Психологія особистості", sub:"Структура стійких індивідуальних відмінностей", nodes:[
+  {id:"bigfive", name:"Велика пʼятірка", fig:"Мак-Крей, Коста", rigor:"green", claim:"Особистість описується пʼятьма стійкими вимірами, відтвореними крос-культурно.", critique:"Описує структуру рис, але слабко пояснює причинні механізми їх походження."},
+  {id:"eysenck", name:"PEN-модель", fig:"Айзенк", rigor:"amber", claim:"Три базові виміри особистості мають конкретний нейрофізіологічний субстрат збудження.", critique:"Запропоновані мозкові механізми лише частково підтвердились пізнішими дослідженнями."},
+  {id:"cattell", name:"16 факторів особистості", fig:"Кеттелл", rigor:"coral", claim:"Особистість складається із шістнадцяти базових вихідних рис через факторний аналіз.", critique:"Факторна структура погано відтворювалась у незалежних вибірках, витіснена Великою пʼятіркою."},
+  {id:"hexaco", name:"HEXACO", fig:"Ештон, Лі", rigor:"green", claim:"Шостий фактор чесності-смиренності покращує передбачення антисоціальної поведінки.", critique:"Новіша модель, довгострокова крос-культурна валідизація ще триває."}
+]},
+{tag:"Рівень", name:"Позитивна й еволюційна", sub:"Функція психіки в контексті адаптації й процвітання", nodes:[
+  {id:"seligman", name:"PERMA / навчена безпорадність", fig:"Селігман", rigor:"amber", claim:"Благополуччя складається з пʼяти вимірів: позитив, залученість, стосунки, смисл, досягнення.", critique:"Модель PERMA більш прескриптивна, ніж емпірично виведена з даних."},
+  {id:"buss", name:"Еволюційна психологія", fig:"Басс", rigor:"amber", claim:"Багато психологічних механізмів — адаптації, що вирішували проблеми виживання предків.", critique:"Пояснення часто пост-фактум 'just-so stories', важко фальсифікувати."},
+  {id:"cosmides", name:"Когнітивні адаптації", fig:"Космідес, Тубі", rigor:"amber", claim:"Розум складається зі спеціалізованих модулів, кожен налаштований на конкретну адаптивну задачу.", critique:"Ступінь модульності мозку є предметом активної незгоди в когнітивній науці."}
+]}
+];
+
+const CONNECTIONS = [
+  ["attach","sdt"],["attach","panksepp"],["leontiev","sdt"],["kegan","leontiev"],
+  ["beck","friston"],["bandura","piaget"],["maslow","sdt"],["rogers","sdt"],
+  ["bronfenbrenner","vygotsky"],["erikson","kegan"],["damasio","attach"],
+  ["skinner","beck"],["seligman","beck"],["cosmides","kahneman"]
+];
+
+const grid = document.getElementById('grid');
+const nodeEls = {};
+DATA.forEach(t=>{
+  const terr = document.createElement('div');
+  terr.className='territory';
+  terr.setAttribute('data-tag', t.tag);
+  terr.innerHTML = `<h2>${t.name}</h2><div class="sub">${t.sub}</div><div class="nodes"></div>`;
+  const nodesWrap = terr.querySelector('.nodes');
+  t.nodes.forEach(n=>{
+    const el = document.createElement('div');
+    el.className='node';
+    el.dataset.id=n.id;
+    el.dataset.name=(n.name+' '+n.fig).toLowerCase();
+    el.innerHTML = `<div class="node-top"><span class="dot ${n.rigor}"></span><span class="node-name">${n.name}</span></div><div class="node-fig">${n.fig}</div>`;
+    el.onclick = ()=>openPanel(n);
+    nodesWrap.appendChild(el);
+    nodeEls[n.id]=el;
+  });
+  grid.appendChild(terr);
+});
+
+function drawConnections(){
+  const svg = document.getElementById('connections');
+  const canvasRect = document.getElementById('canvas').getBoundingClientRect();
+  const s = scale;
+  svg.innerHTML='';
+  svg.setAttribute('width', grid.scrollWidth);
+  svg.setAttribute('height', grid.scrollHeight);
+  CONNECTIONS.forEach(([a,b])=>{
+    const elA = nodeEls[a], elB = nodeEls[b];
+    if(!elA||!elB) return;
+    const ra = elA.getBoundingClientRect(), rb = elB.getBoundingClientRect();
+    const x1 = (ra.left-canvasRect.left)/s + ra.width/2/s;
+    const y1 = (ra.top-canvasRect.top)/s + ra.height/2/s;
+    const x2 = (rb.left-canvasRect.left)/s + rb.width/2/s;
+    const y2 = (rb.top-canvasRect.top)/s + rb.height/2/s;
+    const mx=(x1+x2)/2, my=(y1+y2)/2 - 40;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', `M${x1},${y1} Q${mx},${my} ${x2},${y2}`);
+    svg.appendChild(path);
+  });
+}
+
+let scale=1, tx=0, ty=0, dragging=false, sx=0, sy=0, stx=0, sty=0;
+const viewport = document.getElementById('viewport');
+const canvas = document.getElementById('canvas');
+
+function applyTransform(){ canvas.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`; }
+
+function resetView(){
+  const vw = viewport.clientWidth, vh = viewport.clientHeight;
+  const cw = grid.scrollWidth, ch = grid.scrollHeight;
+  scale = Math.min(vw/cw, vh/ch) * 0.92;
+  scale = Math.max(0.28, Math.min(scale, 1));
+  tx = (vw - cw*scale)/2;
+  ty = (vh - ch*scale)/2;
+  applyTransform();
+}
+
+function zoomBy(f){
+  const vw = viewport.clientWidth/2, vh = viewport.clientHeight/2;
+  const prev = scale;
+  scale = Math.max(0.25, Math.min(scale*f, 2.2));
+  tx = vw - (vw-tx)*(scale/prev);
+  ty = vh - (vh-ty)*(scale/prev);
+  applyTransform();
+}
+
+viewport.addEventListener('wheel', e=>{
+  e.preventDefault();
+  const rect = viewport.getBoundingClientRect();
+  const mx = e.clientX-rect.left, my = e.clientY-rect.top;
+  const prev = scale;
+  scale = Math.max(0.25, Math.min(scale*(e.deltaY<0?1.1:0.9), 2.2));
+  tx = mx - (mx-tx)*(scale/prev);
+  ty = my - (my-ty)*(scale/prev);
+  applyTransform();
+},{passive:false});
+
+viewport.addEventListener('pointerdown', e=>{
+  if(e.target.closest('.node')) return;
+  dragging=true; viewport.classList.add('dragging');
+  sx=e.clientX; sy=e.clientY; stx=tx; sty=ty;
+});
+window.addEventListener('pointermove', e=>{
+  if(!dragging) return;
+  tx = stx + (e.clientX-sx);
+  ty = sty + (e.clientY-sy);
+  applyTransform();
+});
+window.addEventListener('pointerup', ()=>{ dragging=false; viewport.classList.remove('dragging'); });
+
+function openPanel(n){
+  document.querySelectorAll('.node').forEach(el=>el.classList.remove('active'));
+  nodeEls[n.id].classList.add('active');
+  document.getElementById('p-name').textContent = n.name;
+  document.getElementById('p-figures').textContent = n.fig;
+  document.getElementById('p-claim').textContent = n.claim;
+  document.getElementById('p-critique').textContent = n.critique;
+  const badge = document.getElementById('p-badge');
+  badge.className = 'badge '+n.rigor;
+  badge.textContent = n.rigor==='green'?'висока строгість':n.rigor==='amber'?'середня строгість':'нижча строгість';
+  document.getElementById('panel').classList.add('open');
+}
+function closePanel(){
+  document.getElementById('panel').classList.remove('open');
+  document.querySelectorAll('.node').forEach(el=>el.classList.remove('active'));
+}
+
+document.getElementById('search').addEventListener('input', e=>{
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('.node').forEach(el=>{
+    el.classList.toggle('dim', q.length>0 && !el.dataset.name.includes(q));
+  });
+});
+
+let activeFilter=null;
+function filterRigor(r){
+  activeFilter = activeFilter===r? null : r;
+  document.querySelectorAll('.node').forEach(el=>{
+    const dot = el.querySelector('.dot');
+    const has = dot.classList.contains(activeFilter);
+    el.classList.toggle('dim', activeFilter!==null && !has);
+  });
+}
+
+window.addEventListener('load', ()=>{
+  resetView();
+  setTimeout(drawConnections, 100);
+});
+window.addEventListener('resize', ()=>{ drawConnections(); });
+</script>
+</body>
+</html>

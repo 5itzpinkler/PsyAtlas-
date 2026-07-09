@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Увага, память, мова</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="atlas-core.css">
+<script src="https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+</head>
+<body>
+
+<div id="loading">Розкладаю граф…</div>
+
+<div id="top">
+  <a class="back" href="neuro_atlas_index.html">← Атлас</a>
+  <span class="tier-chip">Когнітивний рівень</span>
+  <h1>Увага, память, мова</h1>
+  <input id="search" placeholder="Пошук…">
+  <button class="zoombtn" onclick="AtlasMap.zoomBy(1.25)">+</button>
+  <button class="zoombtn" onclick="AtlasMap.zoomBy(0.8)">−</button>
+  <button class="zoombtn" onclick="AtlasMap.fit()" style="width:auto;padding:0 12px;font-size:12px;">⟲</button>
+</div>
+
+<div id="info">
+  <div class="panel-box" id="intro">
+    <svg width="200" height="120" viewBox="0 0 200 120">
+      <path d="M22,72 Q14,38 46,24 Q84,8 128,16 Q170,24 178,58 Q182,82 160,94 Q150,110 128,104 Q112,116 92,112 Q56,108 40,90 Q24,86 22,72 Z"
+        fill="none" stroke="#454b63" stroke-width="1.1"/>
+      <circle cx="58" cy="52" r="9" fill="#6b9fd6" opacity="0.55"/>
+      <circle cx="150" cy="48" r="9" fill="#d9a94f" opacity="0.55"/>
+      <circle cx="95" cy="86" r="9" fill="#5fb583" opacity="0.55"/>
+      <circle cx="120" cy="60" r="9" fill="#c986ab" opacity="0.55"/>
+      <text x="58" y="40" text-anchor="middle" font-size="8" fill="#6b9fd6" font-family="Manrope">увага</text>
+      <text x="150" y="36" text-anchor="middle" font-size="8" fill="#d9a94f" font-family="Manrope">память</text>
+      <text x="95" y="106" text-anchor="middle" font-size="8" fill="#5fb583" font-family="Manrope">викон.</text>
+      <text x="132" y="76" text-anchor="middle" font-size="8" fill="#c986ab" font-family="Manrope">мова</text>
+    </svg>
+    <p>Чотири переплетені когнітивні системи. Це рівень, де нейробіологія переходить у психологію: тут працюють функції, які класична когнітивна школа описувала «зверху», а ми бачимо їхній субстрат.</p>
+  </div>
+  <div class="panel-box" id="legend">
+    <div class="lg-title">Категорії · клік = фільтр</div>
+    <div class="row" data-cat="attention"><span class="sw" style="background:#6b9fd6"></span>Увага</div>
+    <div class="row" data-cat="memory"><span class="sw" style="background:#d9a94f"></span>Памʼять</div>
+    <div class="row" data-cat="executive"><span class="sw" style="background:#5fb583"></span>Виконавчі функції</div>
+    <div class="row" data-cat="language"><span class="sw" style="background:#c986ab"></span>Мова</div>
+    <div class="row" data-cat="process"><span class="sw diamond" style="background:#8a90a8"></span>Процес / функція</div>
+    <div class="row"><span class="sw dashed"></span>Вхід з іншого домену</div>
+  </div>
+</div>
+
+<div id="panel">
+  <button class="close" onclick="AtlasMap.closePanel()">×</button>
+  <div class="badge" id="p-badge"></div>
+  <h3 id="p-name"></h3>
+  <div id="p-jump"></div>
+  <div class="label">Функція</div>
+  <div id="p-func"></div>
+  <div class="label">Клінічне значення</div>
+  <div id="p-clin"></div>
+  <div class="xref" id="p-xref"></div>
+</div>
+
+<div id="cy"></div>
+
+<script src="atlas-core.js"></script>
+<script>
+const N=(id,label,cat,o={})=>({data:Object.assign({id,label,cat},o)});
+const E=(s,t,label)=>({data:{id:s+'_'+t+(label||''),source:s,target:t,label:label||''}});
+
+const nodes = [
+// ── ВХОДИ З ІНШИХ ДОМЕНІВ ──
+N('arasStub','Висхідна активуюча система (ARAS)','stub',{shape:'ellipse',stub:true,jumpTo:'circuits',
+  func:'Тут — лише точка входу: без базового арузалу від ARAS жодна когнітивна функція неможлива. Повний контур розібраний у домені «Нейроанатомічні контури».',
+  xref:[{domain:'circuits',focus:'aras',label:'ARAS у контурному домені'}]}),
+N('hippoStub','Гіпокамп (вхід)','stub',{shape:'ellipse',stub:true,jumpTo:'circuits',
+  func:'Тут — лише як шлюз консолідації памʼяті. Повна анатомія й коло Папеца — у контурному домені.',
+  xref:[{domain:'circuits',focus:'hippo',label:'Гіпокамп у контурному домені'},{domain:'membrane',focus:'ltp',label:'LTP — клітинний механізм'}]}),
+
+// ── УВАГА ──
+N('alerting','Мережа пильності (alerting)','attention',{shape:'ellipse',
+  func:'Підтримує загальний стан готовності реагувати — тонічну й фазову пильність. Спирається на норадренергічний вхід від голубуватої плями й праву лобово-тімʼяну кору.\n\nЦе найбазовіший з трьох компонентів уваги за моделлю Познера: не «на що саме» ми звертаємо увагу, а сам факт того, що система в принципі готова обробляти.',
+  clin:'Дефіцит тонічної пильності — одна зі складових неуважного підтипу СДУГ; коливання цієї мережі пояснюють, чому увага при СДУГ не відсутня повністю, а нестабільна в часі.'}),
+N('orienting','Мережа орієнтування (orienting)','attention',{shape:'ellipse',
+  func:'Спрямовує увагу до конкретного джерела — просторово чи до модальності. Включає верхню тімʼяну частку, лобові очні поля й підкіркові структури (верхні горбки, подушку таламуса), модулюється ацетилхоліном.',
+  clin:'Синдром однобічного просторового нехтування (neglect) при ураженні правої тімʼяної частки — драматична ілюстрація: пацієнт не усвідомлює цілу половину простору, хоча зір інтактний.'}),
+N('executive-att','Мережа виконавчого контролю уваги','attention',{shape:'ellipse',
+  func:'Вирішує конфлікт між конкуруючими сигналами й утримує ціль попри відволікання. Центрована на передній поясній корі (ACC) і латеральній префронтальній корі.\n\nСаме ця мережа активується в тесті Струпа — коли треба назвати колір слова, ігноруючи його значення.',
+  clin:'Дисфункція ACC тут напряму повʼязує увагу з метакогніцією: та сама структура, що детектує конфлікт уваги, детектує й помилку власного судження.',
+  xref:[{domain:'circuits',focus:'cingulate',label:'Поясна кора (ACC) у контурному домені'}]}),
+
+// ── ПАМʼЯТЬ ──
+N('sensory-mem','Сенсорна памʼять','memory',{shape:'ellipse',
+  func:'Надкоротке (мілісекунди–секунди) утримання сенсорного сліду — іконічна (зорова) й ехоїчна (слухова). Це буфер сирого сигналу до того, як увага вирішить, що обробляти далі.',
+  clin:'Обʼєм сенсорної памʼяті — одна з елементарних мір, що входять у нейропсихологічну оцінку швидкості обробки інформації.'}),
+N('working-mem','Робоча памʼять','memory',{shape:'ellipse',
+  func:'Активне утримання й маніпуляція обмеженим обсягом інформації «в умі» — 4±1 елемент за сучасними оцінками (перегляд класичного «7±2» Міллера). Центрована на дорсолатеральній префронтальній корі, підтримується стійкою нейронною активністю й дофаміновою модуляцією.\n\nЗа моделлю Баддлі складається з фонологічної петлі, зорово-просторового блокнота й центрального виконавця, що ними керує.',
+  clin:'Робоча памʼять — одна з найвразливіших функцій: страждає при шизофренії (гіподофамінергія в ПФК), депресії, СДУГ і нормальному старінні. Її ємність корелює з показниками рухомого інтелекту.',
+  xref:[{domain:'circuits',focus:'pfc',label:'Префронтальна кора й дофамін'}]}),
+N('declarative','Декларативна (експліцитна) памʼять','memory',{shape:'ellipse',
+  func:'Свідомо доступна памʼять про факти (семантична) і події (епізодична). Кодується через гіпокамп, поступово консолідується в неокортекс.\n\nЦе те, що ми зазвичай маємо на увазі під словом «памʼять» — але, як показує наступний вузол, це лише одна з двох великих систем.',
+  clin:'Вибірково руйнується при ураженні гіпокампа (пацієнт H.M.) і першою страждає при Альцгеймері, тоді як процедурна памʼять залишається збереженою.',
+  xref:[{domain:'membrane',focus:'creb',label:'CREB — синтез білка для довгої памʼяті'}]}),
+N('procedural','Процедурна (імпліцитна) памʼять','memory',{shape:'ellipse',
+  func:'Несвідома памʼять навичок і звичок — їзда на велосипеді, друк наосліп. Спирається на базальні ганглії й мозочок, а не на гіпокамп.',
+  clin:'Збереження цієї системи при амнезії — фундаментальний доказ того, що «памʼять» не єдина: H.M. не памʼятав знайомства з завданням, але з кожним разом виконував його краще.',
+  xref:[{domain:'circuits',focus:'striatum',label:'Стріатум у контурному домені'}]}),
+N('consolidation','Консолідація','process',{shape:'diamond',
+  func:'Процес стабілізації сліду памʼяті — від синаптичної (години, LTP) до системної (тижні–роки, перенесення з гіпокампа в кору). Значною мірою відбувається під час сну.',
+  clin:'Порушення сну погіршує консолідацію — механістичний місток між розладами сну й скаргами на памʼять при депресії й тривозі.'}),
+
+// ── ВИКОНАВЧІ ФУНКЦІЇ ──
+N('inhibition','Гальмівний контроль','executive',{shape:'ellipse',
+  func:'Здатність придушити домінантну автоматичну реакцію на користь доцільнішої — основа самоконтролю. Спирається на праву нижню лобову звивину й ПФК.\n\nЦе нейробіологічний субстрат того, що в психології називають «силою волі» — і, як ти вже писав, саме тому «сила волі» не безмежний ресурс: вона впирається в конкретну метаболічну вартість роботи ПФК.',
+  clin:'Дефіцит гальмування — ядро імпульсивного підтипу СДУГ і фактор ризику залежностей; тест go/no-go операціоналізує цю функцію.'}),
+N('shifting','Когнітивна гнучкість (перемикання)','executive',{shape:'ellipse',
+  func:'Здатність перемикатися між завданнями, правилами чи перспективами. Вимірюється Вісконсинським тестом сортування карток; спирається на ПФК і її звʼязки зі стріатумом.',
+  clin:'Ригідність перемикання — характерна риса при ураженнях лобової кори, ОКР і розладах аутистичного спектра.'}),
+N('updating','Оновлення робочої памʼяті','executive',{shape:'ellipse',
+  func:'Постійне заміщення застарілого вмісту робочої памʼяті релевантним новим — «редагування» активного змісту свідомості в реальному часі.',
+  clin:'Один з трьох ядерних виконавчих компонентів у впливовій моделі Міяке; його ефективність корелює з академічною успішністю сильніше за загальний IQ у деяких дослідженнях.'}),
+
+// ── МОВА ──
+N('broca','Зона Брока','language',{shape:'ellipse',
+  func:'Задньонижня лобова звивина домінантної (зазвичай лівої) півкулі — продукція мовлення й обробка синтаксису. Не просто «моторний центр мови»: бере участь у побудові граматичної структури.',
+  clin:'Ураження дає моторну афазію Брока: мовлення сповільнене, телеграфне, з зусиллям, але розуміння відносно збережене — пацієнт знає, що хоче сказати, але не може побудувати фразу.'}),
+N('wernicke','Зона Верніке','language',{shape:'ellipse',
+  func:'Задня верхня скронева звивина домінантної півкулі — розуміння мовлення й доступ до значення слів.',
+  clin:'Ураження дає сенсорну афазію Верніке: мовлення побіжне й граматично правильне, але позбавлене змісту («словесний салат»), а розуміння тяжко порушене — і пацієнт часто не усвідомлює дефіциту.'}),
+N('arcuate','Дугоподібний пучок','language',{shape:'ellipse',
+  func:'Тракт білої речовини, що зʼєднує зону Верніке із зоною Брока — фізичний «кабель» між розумінням і продукцією мовлення.',
+  clin:'Ізольоване ураження дає провідникову афазію: розуміння й спонтанне мовлення збережені, але повторення почутого грубо порушене — знову приклад того, що функція належить контуру, а не окремій зоні.'}),
+N('language-synthesis','Мова як друга сигнальна система','process',{shape:'diamond',
+  func:'Точка синтезу: мова не лише передає думку, а й перебудовує саме мислення, роблячи його понятійним — теза, що зшиває нейролінгвістику з культурно-історичною школою Виготського.\n\nТут нейробіологічний домен напряму стикається з психологічним: те, що на цьому рівні є трактами й зонами, на рівні поведінки стає опосередкуванням знаком.',
+  clin:'Концептуальний місток до психологічного атласу — саме тут «залізо» мозку переходить у «софт» культурно-історичної теорії.',
+  xref:[{domain:'index',label:'До атласу психологічних теорій'}]})
+];
+
+const edges = [
+E('arasStub','alerting','арузал'),
+E('alerting','orienting'),E('orienting','executive-att'),
+E('executive-att','working-mem','фокус утримує зміст'),
+E('sensory-mem','working-mem','відбір увагою'),
+E('working-mem','declarative','кодування'),
+E('hippoStub','declarative','консолідація'),
+E('declarative','consolidation'),E('procedural','consolidation'),
+E('working-mem','inhibition'),E('working-mem','shifting'),E('working-mem','updating'),
+E('executive-att','inhibition','спільна ПФК'),
+E('wernicke','arcuate'),E('arcuate','broca'),
+E('broca','language-synthesis'),E('wernicke','language-synthesis'),
+E('working-mem','language-synthesis','фонологічна петля')
+];
+
+const catColor = {attention:'#6b9fd6',memory:'#d9a94f',executive:'#5fb583',language:'#c986ab',
+  process:'#8a90a8',stub:'#7d8399'};
+const catLabel = {attention:'увага',memory:'памʼять',executive:'виконавчі функції',language:'мова',
+  process:'процес / функція',stub:'вхід з іншого домену'};
+
+// зворотний місток на домен свідомості
+(()=>{ const n=nodes.find(x=>x.data.id==='alerting'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'consciousness',focus:'arousal',label:'Рівень свідомості (арузал)'}]); } })();
+// зворотний місток на домен свідомості
+(()=>{ const n=nodes.find(x=>x.data.id==='working-mem'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'consciousness',focus:'globalWorkspace',label:'Глобальне транслювання'}]); } })();
+(()=>{ const n=nodes.find(x=>x.data.id==='alerting'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'adhd',label:'СДУГ — нестабільність пильності'}]); } })();
+(()=>{ const n=nodes.find(x=>x.data.id==='inhibition'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'adhd',label:'СДУГ — імпульсивний підтип'}]); } })();
+AtlasMap.build({nodes, edges, catColor, catLabel});
+</script>
+</body>
+</html>

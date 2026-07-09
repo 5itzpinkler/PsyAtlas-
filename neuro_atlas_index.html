@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Атлас нейробіології, нейропсихології і психології</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#11131c;--card:#1b1e2c;--card-border:#33374a;--text:#ede8dd;--text-dim:#9aa0b4;--text-faint:#666b80;--gold:#b08b4f;}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);font-family:'Manrope',sans-serif;color:var(--text);min-height:100vh;}
+header{padding:70px 60px 30px;max-width:1100px;margin:0 auto;}
+header .eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+header h1{font-family:'Fraunces',serif;font-weight:500;font-size:38px;margin:0 0 14px;line-height:1.15;}
+header p{color:var(--text-dim);font-size:15px;line-height:1.6;max-width:640px;margin:0;}
+
+.axis{max-width:1100px;margin:20px auto 90px;padding:0 60px;position:relative;}
+.axis::before{content:'';position:absolute;left:88px;top:10px;bottom:10px;width:1px;background:var(--card-border);}
+.tier{display:flex;gap:28px;align-items:flex-start;margin-bottom:6px;position:relative;}
+.tier-label{width:150px;flex-shrink:0;padding-top:22px;text-align:right;font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--text-faint);position:relative;}
+.tier-label::after{content:'';position:absolute;right:-42px;top:28px;width:9px;height:9px;border-radius:50%;
+  background:var(--gold);}
+.cards{display:flex;gap:16px;flex:1;flex-wrap:wrap;padding:8px 0;}
+.card{width:220px;background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:20px;
+  text-decoration:none;color:var(--text);transition:border-color .15s, transform .15s;position:relative;}
+.card.active:hover{border-color:var(--gold);transform:translateY(-3px);}
+.card.disabled{opacity:.4;cursor:default;}
+.card h3{font-family:'Fraunces',serif;font-weight:500;font-size:16.5px;margin:0 0 8px;}
+.card p{font-size:12.5px;color:var(--text-dim);line-height:1.5;margin:0;}
+.status{position:absolute;top:16px;right:16px;font-size:10px;padding:3px 8px;border-radius:12px;
+  text-transform:uppercase;letter-spacing:.05em;}
+.status.live{background:rgba(93,169,126,.18);color:#7fc79c;}
+.status.soon{background:rgba(154,160,180,.12);color:var(--text-faint);}
+
+@media (max-width: 640px){
+  header{padding:44px 22px 20px;}
+  header h1{font-size:28px;}
+  header p{font-size:13.5px;}
+  .axis{padding:0 22px 0 26px;margin:14px auto 60px;}
+  .axis::before{left:8px;}
+  .tier{flex-direction:column;gap:6px;margin-bottom:22px;}
+  .tier-label{width:auto;text-align:left;padding-top:0;padding-left:22px;position:relative;}
+  .tier-label::after{left:-1px;right:auto;top:6px;}
+  .cards{padding-left:22px;}
+  .card{width:100%;max-width:340px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Особистий проєкт · нейробіологія → нейропсихологія → психологія</div>
+  <h1>Атлас механізмів психіки</h1>
+  <p>Від молекули до поведінки — навігаційна карта, де кожен домен розкривається у власну щільну схему,
+  побудовану за принципом класичного постера метаболічних шляхів. Клікай активні домени (позначені LIVE).</p>
+</header>
+
+<div class="axis">
+
+  <div class="tier">
+    <div class="tier-label">Молекулярний</div>
+    <div class="cards">
+      <a class="card active" href="synapse.html">
+        <span class="status live">live</span>
+        <h3>Синаптична нейротрансмісія</h3>
+        <p>Синтез і деградація дофаміну, серотоніну, ГАМК/глутамату, ацетилхоліну; рецептори, другі посередники, везикулярний цикл.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Клітинний</div>
+    <div class="cards">
+      <a class="card active" href="membrane.html">
+        <span class="status live">live</span>
+        <h3>Мембрана і потенціал дії</h3>
+        <p>Потенціал спокою, деполяризація, сальтаторне проведення, LTP/LTD, дорослий нейрогенез.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Контурний</div>
+    <div class="cards">
+      <a class="card active" href="circuits.html">
+        <span class="status live">live</span>
+        <h3>Нейроанатомічні контури</h3>
+        <p>Коло Папеца, пряма/непряма ланки базальних гангліїв, мезолімбічний/мезокортикальний шлях, ARAS.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Афективний</div>
+    <div class="cards">
+      <a class="card active" href="affect.html">
+        <span class="status live">live</span>
+        <h3>Афективні контури</h3>
+        <p>Сім систем Панксеппа, HPA-вісь, каскад кортизолу, алостатичне навантаження.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Когнітивний</div>
+    <div class="cards">
+      <a class="card active" href="cognition.html">
+        <span class="status live">live</span>
+        <h3>Увага, память, мова</h3>
+        <p>Три мережі уваги, системи памʼяті, виконавчі функції, зони Брока й Верніке.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Свідомість</div>
+    <div class="cards">
+      <a class="card active" href="consciousness.html">
+        <span class="status live">live</span>
+        <h3>Арузал і свідомість</h3>
+        <p>Дві осі свідомості, таламокортикальні петлі, розлади свідомості, конкуруючі теорії (GNWT, IIT, HOT), важка проблема.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Розвиток</div>
+    <div class="cards">
+      <a class="card active" href="development.html">
+        <span class="status live">live</span>
+        <h3>Нейророзвиток</h3>
+        <p>Пренатальне формування, критичні й сенситивні періоди, прунінг, мієлінізація, когнітивний резерв.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Патологія</div>
+    <div class="cards">
+      <a class="card active" href="psychopathology.html">
+        <span class="status live">live</span>
+        <h3>Психопатологія як збій контурів</h3>
+        <p>Депресія, психоз, тривога, ПТСР, ОКР, залежність — кожен розлад як розсинхронізація контурів з інших доменів.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Поведінка</div>
+    <div class="cards">
+      <a class="card active" href="psychology_atlas.html">
+        <span class="status live">live</span>
+        <h3>Атлас психологічних теорій</h3>
+        <p>39 теорій, 10 шкіл думки, колір-кодована строгість, містки між школами.</p>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

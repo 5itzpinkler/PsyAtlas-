@@ -59,6 +59,33 @@
   <div class="xref" id="p-xref"></div>
 </div>
 
+<div id="cy-bg" style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;">
+  <div id="cy-bg-layer" style="position:absolute;top:0;left:0;width:1250px;height:900px;transform-origin:0 0;">
+    <svg width="1250" height="900" viewBox="0 0 1250 900" style="overflow:visible;">
+      <!-- Сагітальний контур мозку — суто орієнтир, не анатомічно точний малюнок -->
+      <path d="M60,420 Q40,220 220,90 Q420,-30 720,20 Q1020,60 1150,260
+               Q1220,380 1160,520 Q1180,600 1120,660 Q1140,740 1060,790
+               Q980,850 880,820 Q800,880 690,850 Q520,890 400,820
+               Q220,830 140,700 Q40,650 60,420 Z"
+        fill="none" stroke="#2a2e42" stroke-width="2" opacity="0.6"/>
+      <!-- Стовбур мозку — вужча витягнута форма знизу-справа -->
+      <path d="M870,560 Q950,600 1000,680 Q1040,740 1080,800 Q1100,840 1070,870"
+        fill="none" stroke="#2a2e42" stroke-width="26" stroke-linecap="round" opacity="0.35"/>
+      <!-- Зони: підписані м'які області -->
+      <ellipse cx="500" cy="330" rx="230" ry="220" fill="#c986ab" opacity="0.05"/>
+      <ellipse cx="850" cy="300" rx="220" ry="200" fill="#d9a94f" opacity="0.05"/>
+      <ellipse cx="960" cy="680" rx="180" ry="180" fill="#6b9fd6" opacity="0.05"/>
+      <text x="500" y="70" text-anchor="middle" font-size="13" fill="#c986ab" opacity="0.55"
+        font-family="Manrope" letter-spacing="0.08em">ЛІМБІЧНА СИСТЕМА</text>
+      <text x="900" y="55" text-anchor="middle" font-size="13" fill="#d9a94f" opacity="0.55"
+        font-family="Manrope" letter-spacing="0.08em">БАЗАЛЬНІ ГАНГЛІЇ</text>
+      <text x="1080" y="850" text-anchor="middle" font-size="13" fill="#6b9fd6" opacity="0.55"
+        font-family="Manrope" letter-spacing="0.08em">СТОВБУР / ARAS</text>
+      <text x="150" y="90" text-anchor="middle" font-size="12" fill="#8a90a8" opacity="0.4"
+        font-family="Manrope" letter-spacing="0.08em">ЛОБОВА КОРА</text>
+    </svg>
+  </div>
+</div>
 <div id="cy"></div>
 
 <script src="atlas-core.js"></script>
@@ -187,6 +214,9 @@ N('corticalArousal','Дифузна кортикальна активація','
   'На ЕЕГ це виглядає як десинхронізація — перехід від повільних високоамплітудних хвиль сну до швидких низькоамплітудних хвиль бадьорості.')
 ];
 
+const _pos = {"pfc": {"x": 150, "y": 150}, "cingulate": {"x": 480, "y": 100}, "anteriorThalamus": {"x": 650, "y": 200}, "mammillary": {"x": 680, "y": 380}, "hippo": {"x": 560, "y": 540}, "amygdala": {"x": 370, "y": 560}, "fornix": {"x": 510, "y": 430}, "hypothalamus": {"x": 560, "y": 300}, "papezCircuit": {"x": 450, "y": 190}, "striatum": {"x": 830, "y": 170}, "accumbens": {"x": 820, "y": 280}, "vta": {"x": 900, "y": 350}, "snc": {"x": 860, "y": 470}, "gpe": {"x": 970, "y": 210}, "gpi": {"x": 1130, "y": 340}, "stn": {"x": 1010, "y": 450}, "directPathway": {"x": 890, "y": 100}, "indirectPathway": {"x": 1090, "y": 190}, "mesolimbicPathway": {"x": 680, "y": 610}, "mesocorticalPathway": {"x": 320, "y": 280}, "reticularFormation": {"x": 960, "y": 610}, "intralaminarThalamus": {"x": 700, "y": 480}, "locusCoeruleus": {"x": 1040, "y": 700}, "rapheNuclei": {"x": 1100, "y": 800}, "aras": {"x": 900, "y": 850}, "corticalArousal": {"x": 350, "y": 15}};
+nodes.forEach(n=>{ if(_pos[n.data.id]) n.position = _pos[n.data.id]; });
+
 const edges = [
 E('hippo','fornix'),E('fornix','mammillary'),E('mammillary','anteriorThalamus'),
 E('anteriorThalamus','cingulate'),E('cingulate','hippo','через ентортінальну кору'),
@@ -227,7 +257,7 @@ nodes.forEach(n=>{ if(_xr[n.data.id]) n.data.xref=_xr[n.data.id]; });
 (()=>{ const n=nodes.find(x=>x.data.id==='striatum'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'ocd',label:'Застрягла петля при ОКР'}]); } })();
 const _src = {"hippo": [{"authors": "O’Keefe, J. & Dostrovsky, J.", "year": "1971", "title": "The hippocampus as a spatial map: preliminary evidence from unit activity in the freely-moving rat", "url": "https://doi.org/10.1016/0006-8993(71)90358-1"}, {"authors": "Scoville, W.B. & Milner, B.", "year": "1957", "title": "Loss of recent memory after bilateral hippocampal lesions (випадок H.M.)", "url": "https://doi.org/10.1136/jnnp.20.1.11"}], "papezCircuit": [{"authors": "Papez, J.W.", "year": "1937", "title": "A proposed mechanism of emotion", "url": "https://doi.org/10.1001/archneurpsyc.1937.02260220069003"}], "vta": [{"authors": "Schultz, W.", "year": "1998", "title": "Predictive reward signal of dopamine neurons", "url": "https://doi.org/10.1152/jn.1998.80.1.1"}]};
 nodes.forEach(n=>{ if(_src[n.data.id]) n.data.sources = _src[n.data.id]; });
-AtlasMap.build({nodes, edges, catColor, catLabel});
+AtlasMap.build({nodes, edges, catColor, catLabel, presetPositions:true});
 </script>
 </body>
 </html>

@@ -172,6 +172,8 @@ const catLabel = {attention:'увага',memory:'памʼять',executive:'ви
 (()=>{ const n=nodes.find(x=>x.data.id==='working-mem'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'consciousness',focus:'globalWorkspace',label:'Глобальне транслювання'}]); } })();
 (()=>{ const n=nodes.find(x=>x.data.id==='alerting'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'adhd',label:'СДУГ — нестабільність пильності'}]); } })();
 (()=>{ const n=nodes.find(x=>x.data.id==='inhibition'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'adhd',label:'СДУГ — імпульсивний підтип'}]); } })();
+const _src2 = {"alerting": [{"authors": "Posner, M.I. & Petersen, S.E.", "year": "1990", "title": "The attention system of the human brain", "url": "https://doi.org/10.1146/annurev.ne.13.030190.000325"}], "working-mem": [{"authors": "Baddeley, A.", "year": "2000", "title": "The episodic buffer: a new component of working memory?", "url": "https://doi.org/10.1016/S1364-6613(00)01538-2"}], "broca": [{"authors": "Geschwind, N.", "year": "1970", "title": "The organization of language and the brain", "url": "https://doi.org/10.1126/science.170.3961.940"}]};
+nodes.forEach(n=>{ if(_src2[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_src2[n.data.id]); });
 AtlasMap.build({nodes, edges, catColor, catLabel});
 </script>
 </body>

@@ -275,6 +275,8 @@ nodes.forEach(n=>{ if(_xr[n.data.id]) n.data.xref=_xr[n.data.id]; });
 (()=>{ const n=nodes.find(x=>x.data.id==='striatum'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychopathology',focus:'ocd',label:'Застрягла петля при ОКР'}]); } })();
 const _src = {"hippo": [{"authors": "O’Keefe, J. & Dostrovsky, J.", "year": "1971", "title": "The hippocampus as a spatial map: preliminary evidence from unit activity in the freely-moving rat", "url": "https://doi.org/10.1016/0006-8993(71)90358-1"}, {"authors": "Scoville, W.B. & Milner, B.", "year": "1957", "title": "Loss of recent memory after bilateral hippocampal lesions (випадок H.M.)", "url": "https://doi.org/10.1136/jnnp.20.1.11"}], "papezCircuit": [{"authors": "Papez, J.W.", "year": "1937", "title": "A proposed mechanism of emotion", "url": "https://doi.org/10.1001/archneurpsyc.1937.02260220069003"}], "vta": [{"authors": "Schultz, W.", "year": "1998", "title": "Predictive reward signal of dopamine neurons", "url": "https://doi.org/10.1152/jn.1998.80.1.1"}]};
 nodes.forEach(n=>{ if(_src[n.data.id]) n.data.sources = _src[n.data.id]; });
+const _src2 = {"amygdala": [{"authors": "LeDoux, J.E.", "year": "2000", "title": "Emotion circuits in the brain", "url": "https://doi.org/10.1146/annurev.neuro.23.1.155"}], "striatum": [{"authors": "Albin, R.L., Young, A.B. & Penney, J.B.", "year": "1989", "title": "The functional anatomy of basal ganglia disorders", "url": "https://doi.org/10.1016/0166-2236(89)90074-X"}]};
+nodes.forEach(n=>{ if(_src2[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_src2[n.data.id]); });
 AtlasMap.build({nodes, edges, catColor, catLabel, presetPositions:true});
 </script>
 </body>

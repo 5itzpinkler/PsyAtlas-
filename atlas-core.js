@@ -32,7 +32,7 @@ const AtlasMap = (() => {
     document.getElementById('p-name').textContent = n.label;
     const badge = document.getElementById('p-badge');
     badge.textContent = CATLABEL[n.cat] || n.cat;
-    badge.style.background = CATCOLOR[n.cat] || '#7d8399';
+    badge.style.color = CATCOLOR[n.cat] || '#7d8399';
 
     setParas(document.getElementById('p-func'), n.func);
     setParas(document.getElementById('p-clin'), n.clin);
@@ -124,12 +124,19 @@ const AtlasMap = (() => {
       wheelSensitivity:0.25
     });
 
-    cy.layout(Object.assign({
-      name:'dagre', rankDir:'TB', nodeSep:58, rankSep:135, edgeSep:24,
-      nodeDimensionsIncludeLabels:true, animate:false
-    }, cfg.layout||{})).run();
-
-    cy.fit(null, 85);
+    if(cfg.presetPositions){
+      // Анатомічний макет: координати задані вручну під конкретну ілюстрацію,
+      // dagre не потрібен — просто застосовуємо позиції як є.
+      cy.layout({name:'preset', fit:false}).run();
+      if(cfg.initialView) cy.viewport(cfg.initialView);
+      else cy.fit(null, 60);
+    } else {
+      cy.layout(Object.assign({
+        name:'dagre', rankDir:'TB', nodeSep:58, rankSep:135, edgeSep:24,
+        nodeDimensionsIncludeLabels:true, animate:false
+      }, cfg.layout||{})).run();
+      cy.fit(null, 85);
+    }
 
     // Текст завжди читабельний на екрані незалежно від рівня зуму графа —
     // без цього щільні домени (57 вузлів) стискаються до нечитабельних 4px.
@@ -142,6 +149,19 @@ const AtlasMap = (() => {
     }
     cy.on('zoom', rescaleLabels);
     rescaleLabels();
+
+    // Синхронізація фонової анатомічної ілюстрації (якщо є #cy-bg-layer)
+    // з панорамуванням/зумом графа — та сама математика, що й у cytoscape:
+    // screen = graph*zoom + pan, тож застосовуємо ідентичну CSS-трансформацію.
+    const bgLayer = document.getElementById('cy-bg-layer');
+    if(bgLayer){
+      function syncBg(){
+        const pan = cy.pan(), z = cy.zoom();
+        bgLayer.style.transform = `translate(${pan.x}px,${pan.y}px) scale(${z})`;
+      }
+      cy.on('pan zoom', syncBg);
+      syncBg();
+    }
     const ld = document.getElementById('loading'); if(ld) ld.style.display='none';
 
     cy.on('tap','node', e => openPanel(e.target.data()));

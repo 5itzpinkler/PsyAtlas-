@@ -2,6 +2,7 @@
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Атлас психологічних теорій</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,6 +25,9 @@
   --amber-dim:#8a6f3c;
   --coral:#c1715a;
   --coral-dim:#7d4a3c;
+  --bg-soft:#171a26;
+  --border-soft:#282c40;
+  --gold-soft:#3a3320;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;height:100%;background:var(--bg);overflow:hidden;font-family:'Manrope',sans-serif;}
@@ -84,11 +88,51 @@ svg#connections path{fill:none;stroke:var(--gold);stroke-width:1;stroke-dasharra
 
 #hint{position:fixed;bottom:20px;right:20px;z-index:10;font-size:11px;color:var(--text-faint);text-align:right;
   font-family:'Manrope';line-height:1.6;}
+
+.gs-trigger{background:var(--card);border:1px solid var(--card-border);color:var(--text-dim);
+  border-radius:8px;padding:0 14px;height:38px;font-size:13px;cursor:pointer;display:flex;
+  align-items:center;gap:7px;transition:.15s;white-space:nowrap;}
+.gs-trigger:hover{border-color:var(--gold);color:var(--text);}
+.gs-trigger kbd{background:var(--bg-soft);border:1px solid var(--border-soft);border-radius:4px;
+  padding:1px 6px;font-size:10.5px;font-family:monospace;color:var(--text-faint);}
+#gs-overlay{position:fixed;inset:0;z-index:100;background:rgba(10,11,17,.75);backdrop-filter:blur(3px);
+  display:none;align-items:flex-start;justify-content:center;padding:9vh 20px 20px;}
+#gs-overlay.open{display:flex;}
+#gs-modal{width:100%;max-width:600px;background:var(--bg-soft);border:1px solid var(--card-border);
+  border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden;max-height:76vh;
+  display:flex;flex-direction:column;}
+#gs-input-row{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--border-soft);}
+#gs-input-row svg{flex-shrink:0;opacity:.5;}
+#gs-input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:17px;font-family:'Manrope';}
+#gs-input::placeholder{color:var(--text-faint);}
+#gs-esc{font-size:11px;color:var(--text-faint);border:1px solid var(--border-soft);border-radius:5px;padding:3px 8px;flex-shrink:0;}
+#gs-results{overflow-y:auto;padding:8px;}
+#gs-results .gs-empty{padding:40px 20px;text-align:center;color:var(--text-faint);font-size:13.5px;}
+.gs-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;cursor:pointer;
+  text-decoration:none;color:var(--text);transition:background .1s;}
+.gs-item:hover, .gs-item.gs-active{background:var(--card);}
+.gs-item .gs-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.gs-item .gs-body{min-width:0;flex:1;}
+.gs-item .gs-label{font-size:14.5px;font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gs-item .gs-snippet{font-size:12px;color:var(--text-faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gs-item .gs-domain{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);
+  flex-shrink:0;border:1px solid var(--gold-soft);border-radius:20px;padding:3px 9px;background:rgba(201,160,94,.06);}
+mark{background:rgba(201,160,94,.35);color:inherit;border-radius:3px;padding:0 1px;}
+@media (max-width: 640px){
+  .gs-trigger span.gs-label-text{display:none;}
+  .gs-trigger{padding:0 10px;width:38px;justify-content:center;}
+  #gs-overlay{padding:0;}
+  #gs-modal{max-width:100%;height:100%;max-height:100%;border-radius:0;}
+  #gs-input{font-size:16px;}
+  .gs-item .gs-domain{display:none;}
+  #toolbar{flex-wrap:wrap;}
+}
 </style>
 </head>
 <body>
 
 <div id="toolbar">
+  <button class="gs-trigger"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="gs-label-text">Пошук по атласу</span><kbd>/</kbd></button>
   <input id="search" placeholder="Пошук теорії або автора...">
   <button class="zoombtn" onclick="zoomBy(1.2)">+</button>
   <button class="zoombtn" onclick="zoomBy(0.8)">−</button>
@@ -323,6 +367,23 @@ window.addEventListener('load', ()=>{
   setTimeout(drawConnections, 100);
 });
 window.addEventListener('resize', ()=>{ drawConnections(); });
+
+// Deep-link: якщо в URL є #id — відкрити відповідну теорію (для глобального пошуку)
+if(location.hash){
+  const targetId = location.hash.slice(1);
+  const n = Object.values(nodeEls).length ? DATA.flatMap(t=>t.nodes).find(x=>x.id===targetId) : null;
+  if(n){
+    setTimeout(()=>{
+      openPanel(n);
+      const el = nodeEls[targetId];
+      if(el) el.scrollIntoView({block:'center', inline:'center'});
+    }, 350);
+  }
+}
+
 </script>
+<script src="search-index.js"></script>
+<script src="global-search.js"></script>
+<script>window.addEventListener('load', GlobalSearch.init);</script>
 </body>
 </html>

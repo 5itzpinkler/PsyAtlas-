@@ -19,6 +19,7 @@
   <a class="back" href="neuro_atlas_index.html">← Атлас</a>
   <span class="tier-chip">Контурний рівень</span>
   <h1>Нейроанатомічні контури</h1>
+  <button class="gs-trigger"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="gs-label-text">Пошук по атласу</span><kbd>/</kbd></button>
   <input id="search" placeholder="Пошук структури…">
   <button class="zoombtn" onclick="AtlasMap.zoomBy(1.25)">+</button>
   <button class="zoombtn" onclick="AtlasMap.zoomBy(0.8)">−</button>
@@ -59,6 +60,10 @@
 <div id="cy"></div>
 
 <script src="atlas-core.js"></script>
+<script src="search-index.js"></script>
+<script src="global-search.js"></script>
+<script>window.addEventListener('load', GlobalSearch.init);</script>
+
 <script>
 // Адаптер: старий позиційний формат N(id,label,cat,func,clin[,shape/stub])
 // приводимо до формату ядра N(id,label,cat,{func,clin,...}).

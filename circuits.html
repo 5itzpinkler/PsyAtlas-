@@ -62,27 +62,45 @@
 <div id="cy-bg" style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;">
   <div id="cy-bg-layer" style="position:absolute;top:0;left:0;width:1250px;height:900px;transform-origin:0 0;">
     <svg width="1250" height="900" viewBox="0 0 1250 900" style="overflow:visible;">
-      <!-- Сагітальний контур мозку — суто орієнтир, не анатомічно точний малюнок -->
+      <defs>
+        <pattern id="dotgrid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <circle cx="20" cy="20" r="1.1" fill="#2a2e42" opacity="0.5"/>
+        </pattern>
+      </defs>
+      <!-- Легка крапкова сітка на весь канвас — орієнтир руху навіть у "порожніх" ділянках -->
+      <rect x="-200" y="-200" width="1700" height="1300" fill="url(#dotgrid)"/>
+
+      <!-- Сагітальний контур мозку — орієнтир, не анатомічно точний малюнок -->
       <path d="M60,420 Q40,220 220,90 Q420,-30 720,20 Q1020,60 1150,260
                Q1220,380 1160,520 Q1180,600 1120,660 Q1140,740 1060,790
                Q980,850 880,820 Q800,880 690,850 Q520,890 400,820
                Q220,830 140,700 Q40,650 60,420 Z"
-        fill="none" stroke="#2a2e42" stroke-width="2" opacity="0.6"/>
-      <!-- Стовбур мозку — вужча витягнута форма знизу-справа -->
+        fill="none" stroke="#3a3f5a" stroke-width="3" opacity="0.85"/>
+      <!-- Стовбур мозку -->
       <path d="M870,560 Q950,600 1000,680 Q1040,740 1080,800 Q1100,840 1070,870"
-        fill="none" stroke="#2a2e42" stroke-width="26" stroke-linecap="round" opacity="0.35"/>
-      <!-- Зони: підписані м'які області -->
-      <ellipse cx="500" cy="330" rx="230" ry="220" fill="#c986ab" opacity="0.05"/>
-      <ellipse cx="850" cy="300" rx="220" ry="200" fill="#d9a94f" opacity="0.05"/>
-      <ellipse cx="960" cy="680" rx="180" ry="180" fill="#6b9fd6" opacity="0.05"/>
-      <text x="500" y="70" text-anchor="middle" font-size="13" fill="#c986ab" opacity="0.55"
-        font-family="Manrope" letter-spacing="0.08em">ЛІМБІЧНА СИСТЕМА</text>
-      <text x="900" y="55" text-anchor="middle" font-size="13" fill="#d9a94f" opacity="0.55"
-        font-family="Manrope" letter-spacing="0.08em">БАЗАЛЬНІ ГАНГЛІЇ</text>
-      <text x="1080" y="850" text-anchor="middle" font-size="13" fill="#6b9fd6" opacity="0.55"
-        font-family="Manrope" letter-spacing="0.08em">СТОВБУР / ARAS</text>
-      <text x="150" y="90" text-anchor="middle" font-size="12" fill="#8a90a8" opacity="0.4"
-        font-family="Manrope" letter-spacing="0.08em">ЛОБОВА КОРА</text>
+        fill="none" stroke="#3a3f5a" stroke-width="30" stroke-linecap="round" opacity="0.5"/>
+
+      <!-- Зони: значно виразніша заливка + пунктирна межа кожної зони -->
+      <ellipse cx="500" cy="330" rx="270" ry="260" fill="#c986ab" opacity="0.10"
+        stroke="#c986ab" stroke-width="1.5" stroke-dasharray="6 6" stroke-opacity="0.4"/>
+      <ellipse cx="880" cy="290" rx="260" ry="240" fill="#d9a94f" opacity="0.10"
+        stroke="#d9a94f" stroke-width="1.5" stroke-dasharray="6 6" stroke-opacity="0.4"/>
+      <ellipse cx="950" cy="680" rx="220" ry="220" fill="#6b9fd6" opacity="0.10"
+        stroke="#6b9fd6" stroke-width="1.5" stroke-dasharray="6 6" stroke-opacity="0.4"/>
+      <ellipse cx="230" cy="220" rx="180" ry="170" fill="#8a90a8" opacity="0.08"
+        stroke="#8a90a8" stroke-width="1.5" stroke-dasharray="6 6" stroke-opacity="0.3"/>
+
+      <!-- Підписи зон: по кілька копій розкидано по площі зони, щоб орієнтир був видно
+           з будь-якої точки зуму, а не тільки біля єдиної позиції -->
+      <g font-family="Manrope" letter-spacing="0.1em" font-weight="600">
+        <text x="500" y="90" text-anchor="middle" font-size="16" fill="#c986ab" opacity="0.75">ЛІМБІЧНА СИСТЕМА</text>
+        <text x="380" y="560" text-anchor="middle" font-size="11" fill="#c986ab" opacity="0.45">ЛІМБІЧНА СИСТЕМА</text>
+        <text x="880" y="65" text-anchor="middle" font-size="16" fill="#d9a94f" opacity="0.75">БАЗАЛЬНІ ГАНГЛІЇ</text>
+        <text x="1000" y="470" text-anchor="middle" font-size="11" fill="#d9a94f" opacity="0.45">БАЗАЛЬНІ ГАНГЛІЇ</text>
+        <text x="1070" y="900" text-anchor="middle" font-size="16" fill="#6b9fd6" opacity="0.75">СТОВБУР / ARAS</text>
+        <text x="820" y="700" text-anchor="middle" font-size="11" fill="#6b9fd6" opacity="0.45">СТОВБУР / ARAS</text>
+        <text x="230" y="110" text-anchor="middle" font-size="14" fill="#8a90a8" opacity="0.6">ЛОБОВА КОРА</text>
+      </g>
     </svg>
   </div>
 </div>
@@ -214,7 +232,7 @@ N('corticalArousal','Дифузна кортикальна активація','
   'На ЕЕГ це виглядає як десинхронізація — перехід від повільних високоамплітудних хвиль сну до швидких низькоамплітудних хвиль бадьорості.')
 ];
 
-const _pos = {"pfc": {"x": 150, "y": 150}, "cingulate": {"x": 480, "y": 100}, "anteriorThalamus": {"x": 650, "y": 200}, "mammillary": {"x": 680, "y": 380}, "hippo": {"x": 560, "y": 540}, "amygdala": {"x": 370, "y": 560}, "fornix": {"x": 510, "y": 430}, "hypothalamus": {"x": 560, "y": 300}, "papezCircuit": {"x": 450, "y": 190}, "striatum": {"x": 830, "y": 170}, "accumbens": {"x": 820, "y": 280}, "vta": {"x": 900, "y": 350}, "snc": {"x": 860, "y": 470}, "gpe": {"x": 970, "y": 210}, "gpi": {"x": 1130, "y": 340}, "stn": {"x": 1010, "y": 450}, "directPathway": {"x": 890, "y": 100}, "indirectPathway": {"x": 1090, "y": 190}, "mesolimbicPathway": {"x": 680, "y": 610}, "mesocorticalPathway": {"x": 320, "y": 280}, "reticularFormation": {"x": 960, "y": 610}, "intralaminarThalamus": {"x": 700, "y": 480}, "locusCoeruleus": {"x": 1040, "y": 700}, "rapheNuclei": {"x": 1100, "y": 800}, "aras": {"x": 900, "y": 850}, "corticalArousal": {"x": 350, "y": 15}};
+const _pos = {"pfc": {"x": 200, "y": 180}, "cingulate": {"x": 480, "y": 100}, "anteriorThalamus": {"x": 650, "y": 200}, "mammillary": {"x": 680, "y": 380}, "hippo": {"x": 560, "y": 540}, "amygdala": {"x": 400, "y": 540}, "fornix": {"x": 510, "y": 430}, "hypothalamus": {"x": 560, "y": 300}, "papezCircuit": {"x": 450, "y": 190}, "striatum": {"x": 830, "y": 170}, "accumbens": {"x": 820, "y": 280}, "vta": {"x": 900, "y": 350}, "snc": {"x": 900, "y": 500}, "gpe": {"x": 970, "y": 210}, "gpi": {"x": 1130, "y": 340}, "stn": {"x": 1040, "y": 420}, "directPathway": {"x": 890, "y": 100}, "indirectPathway": {"x": 1090, "y": 190}, "mesolimbicPathway": {"x": 760, "y": 480}, "mesocorticalPathway": {"x": 420, "y": 260}, "reticularFormation": {"x": 960, "y": 610}, "intralaminarThalamus": {"x": 830, "y": 600}, "locusCoeruleus": {"x": 1040, "y": 700}, "rapheNuclei": {"x": 1100, "y": 800}, "aras": {"x": 900, "y": 850}, "corticalArousal": {"x": 330, "y": 90}};
 nodes.forEach(n=>{ if(_pos[n.data.id]) n.position = _pos[n.data.id]; });
 
 const edges = [

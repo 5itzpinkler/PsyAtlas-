@@ -160,6 +160,7 @@ const catLabel = {prenatal:'пренатальне формування',critica
 
 const _src = {"criticalPeriod": [{"authors": "Hubel, D.H. & Wiesel, T.N.", "year": "1970", "title": "The period of susceptibility to the physiological effects of unilateral eye closure in kittens", "url": "https://doi.org/10.1113/jphysiol.1970.sp009022"}], "cognitiveReserve": [{"authors": "Stern, Y.", "year": "2002", "title": "What is cognitive reserve? Theory and research application of the reserve concept", "url": "https://doi.org/10.1017/S1355617702813248"}]};
 nodes.forEach(n=>{ if(_src[n.data.id]) n.data.sources = _src[n.data.id]; });
+(()=>{ const n=nodes.find(x=>x.data.id==='attachmentCP'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychology',focus:'schema',label:'Схема-терапія — ранні дезадаптивні схеми'}]); } })();
 AtlasMap.build({nodes, edges, catColor, catLabel, layout:{rankSep:135, nodeSep:58}});
 </script>
 </body>

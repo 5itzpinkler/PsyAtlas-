@@ -277,6 +277,8 @@ const _src = {"hippo": [{"authors": "O’Keefe, J. & Dostrovsky, J.", "year": "1
 nodes.forEach(n=>{ if(_src[n.data.id]) n.data.sources = _src[n.data.id]; });
 const _src2 = {"amygdala": [{"authors": "LeDoux, J.E.", "year": "2000", "title": "Emotion circuits in the brain", "url": "https://doi.org/10.1146/annurev.neuro.23.1.155"}], "striatum": [{"authors": "Albin, R.L., Young, A.B. & Penney, J.B.", "year": "1989", "title": "The functional anatomy of basal ganglia disorders", "url": "https://doi.org/10.1016/0166-2236(89)90074-X"}]};
 nodes.forEach(n=>{ if(_src2[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_src2[n.data.id]); });
+(()=>{ const n=nodes.find(x=>x.data.id==='amygdala'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychology',focus:'dbt',label:'ДБТ — регуляція емоцій'},{domain:'psychology',focus:'emdr',label:'EMDR — переробка травми'}]); } })();
+(()=>{ const n=nodes.find(x=>x.data.id==='cingulate'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychology',focus:'festinger',label:'Когнітивний дисонанс — конфлікт переконання й дії'}]); } })();
 AtlasMap.build({nodes, edges, catColor, catLabel, presetPositions:true});
 </script>
 </body>

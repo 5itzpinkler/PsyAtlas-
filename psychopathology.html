@@ -156,6 +156,9 @@ const catLabel = {mood:'афективний розлад',psychosis:'психо
 
 const _src = {"schizophrenia": [{"authors": "Howes, O.D. & Kapur, S.", "year": "2009", "title": "The dopamine hypothesis of schizophrenia: version III — the final common pathway", "url": "https://doi.org/10.1093/schbul/sbp006"}], "diathesisStress": [{"authors": "Zubin, J. & Spring, B.", "year": "1977", "title": "Vulnerability: A new view of schizophrenia", "url": "https://doi.org/10.1037/0021-843X.86.2.103"}], "rdoc": [{"authors": "Insel, T. et al.", "year": "2010", "title": "Research Domain Criteria (RDoC): toward a new classification framework for research on mental disorders", "url": "https://doi.org/10.1176/appi.ajp.2010.09091379"}]};
 nodes.forEach(n=>{ if(_src[n.data.id]) n.data.sources = _src[n.data.id]; });
+(()=>{ const n=nodes.find(x=>x.data.id==='ptsd'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychology',focus:'emdr',label:'EMDR — цільова терапія'}]); } })();
+(()=>{ const n=nodes.find(x=>x.data.id==='depression'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychology',focus:'mbct',label:'MBCT — профілактика рецидиву'},{domain:'psychology',focus:'distortions',label:'Когнітивні викривлення'}]); } })();
+(()=>{ const n=nodes.find(x=>x.data.id==='addiction'); if(n){ n.data.xref=(n.data.xref||[]).concat([{domain:'psychology',focus:'mi',label:'Мотиваційне інтерв\'ю'}]); } })();
 AtlasMap.build({nodes, edges, catColor, catLabel, layout:{rankSep:145, nodeSep:60}});
 </script>
 </body>

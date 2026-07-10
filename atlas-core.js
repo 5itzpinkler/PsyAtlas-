@@ -14,6 +14,7 @@ const AtlasMap = (() => {
     consciousness:  {file:'consciousness.html',  title:'Арузал і свідомість'},
     development:    {file:'development.html',    title:'Нейророзвиток'},
     psychopathology:{file:'psychopathology.html',title:'Психопатологія як збій контурів'},
+    psychology:     {file:'psychology_atlas.html',title:'Атлас психологічних теорій'},
     index:          {file:'neuro_atlas_index.html', title:'Атлас'}
   };
 

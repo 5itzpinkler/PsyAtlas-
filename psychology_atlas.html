@@ -85,6 +85,14 @@ svg#connections path{fill:none;stroke:var(--gold);stroke-width:1;stroke-dasharra
 #panel .figures{font-size:13px;color:var(--gold);margin-bottom:20px;}
 #panel .label{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-faint);margin:18px 0 6px;}
 #panel p{font-size:14px;line-height:1.6;color:var(--text-dim);margin:0;}
+#panel .sources{list-style:none;margin:0;padding:0;}
+#panel .sources li{font-size:13px;line-height:1.55;color:var(--text-dim);margin:0 0 10px;padding-left:18px;position:relative;}
+#panel .sources li::before{content:'—';position:absolute;left:0;color:var(--gold);}
+#panel .sources .src-authors{color:var(--text);font-weight:500;}
+#panel .sources .src-year{color:var(--text-faint);font-family:'IBM Plex Mono',monospace;}
+#panel .sources a{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-soft);}
+#panel .sources a:hover{border-bottom-style:solid;}
+#panel .no-sources{font-size:12.5px;color:var(--text-faint);font-style:italic;}
 
 #hint{position:fixed;bottom:20px;right:20px;z-index:10;font-size:11px;color:var(--text-faint);text-align:right;
   font-family:'IBM Plex Sans';line-height:1.6;}
@@ -157,6 +165,8 @@ mark{background:rgba(201,138,63,.35);color:inherit;border-radius:3px;padding:0 1
   <p id="p-claim"></p>
   <div class="label">Слабке місце / критика</div>
   <p id="p-critique"></p>
+  <div class="label">Джерела</div>
+  <div id="p-sources"></div>
 </div>
 
 <div id="viewport">
@@ -236,6 +246,15 @@ const DATA = [
   {id:"festinger", name:"Теорія когнітивного дисонансу", fig:"Фестінгер", rigor:"green", claim:"Суперечність між переконанням і дією створює психологічний дискомфорт, який людина усуває, змінюючи саме переконання, а не дію.", critique:"Класична теорія із сотнями реплікацій, але існує кілька конкуруючих пояснень тих самих ефектів (напр. теорія самосприйняття Бема) — досі не до кінця ясно, який механізм первинний."},
   {id:"zimbardo", name:"Стенфордський тюремний експеримент", fig:"Зімбардо", rigor:"coral", claim:"Ситуаційна роль (наглядач/увʼязнений) сама собою штовхає звичайних людей до жорстокої чи покірної поведінки, незалежно від особистості.", critique:"Розсекречені записи й журналістські розслідування показали: дослідник активно інструктував 'наглядачів' бути жорсткішими — результат значною мірою підганявся, а не спостерігався спонтанно. Одна з найгучніших методологічних дискредитацій в історії психології."},
   {id:"cialdini", name:"Принципи впливу і переконання", fig:"Чалдіні", rigor:"amber", claim:"Існує невелика кількість універсальних психологічних важелів (взаємність, послідовність, соціальний доказ, авторитет, симпатія, дефіцит), які систематично підвищують згоду.", critique:"Синтез прикладних спостережень, а не єдина перевірювана теорія; частина класичних ефектів впливу останніми роками показала слабшу відтворюваність у великих реплікаційних проєктах."}
+]},
+{tag:"Школа", name:"Клінічні підходи", sub:"Терапевтичні модальності — не теорії, а робочі інструменти зміни", nodes:[
+  {id:"dbt", name:"Діалектична поведінкова терапія (ДБТ)", fig:"Лайнен", rigor:"green", claim:"Поєднує на перший погляд суперечливі стратегії — беззастережне прийняття поточного стану і водночас активну роботу над зміною — через навчання чотирьох наборів навичок: усвідомленості, толерантності до дистресу, регуляції емоцій і міжособистісної ефективності.", critique:"Найсильніша доказова база серед 'терапій третьої хвилі' саме для прикордонного розладу особистості й хронічної суїцидальності; для інших станів доказів менше.", sources:[{authors:"Linehan, M.M.",year:"1993",title:"Cognitive-Behavioral Treatment of Borderline Personality Disorder",url:""}]},
+  {id:"act", name:"Терапія прийняття та відповідальності (АСТ)", fig:"Хейз", rigor:"green", claim:"Мета не позбутися неприємних думок і почуттів, а змінити стосунки з ними — через психологічну гнучкість, когнітивне дефузування (бачити думку як думку, а не факт) і дії, узгоджені з особистими цінностями.", critique:"Метааналізи показують ефективність, порівнянну з класичною КПТ, але механізм дії (психологічна гнучкість як медіатор) підтверджений менш однозначно, ніж сама клінічна ефективність.", sources:[{authors:"Hayes, S.C., Strosahl, K.D. & Wilson, K.G.",year:"1999",title:"Acceptance and Commitment Therapy",url:""}]},
+  {id:"schema", name:"Схема-терапія", fig:"Янг", rigor:"amber", claim:"Ранні дезадаптивні схеми — стійкі патерни, що формуються з незадоволених базових потреб дитинства — активуються в дорослому житті через 'режими' (внутрішні стани), з якими терапевт працює напряму, включно з обмеженим репарентингом.", critique:"Інтегративний підхід (психодинаміка + КПТ + прив'язаність), тому важче ізольовано перевірити, який саме компонент дає ефект; найбільше доказів для прикордонного розладу особистості.", sources:[{authors:"Young, J.E., Klosko, J.S. & Weishaar, M.E.",year:"2003",title:"Schema Therapy: A Practitioner's Guide",url:""}]},
+  {id:"emdr", name:"EMDR (десенсибілізація і репроцесинг рухами очей)", fig:"Шапіро", rigor:"amber", claim:"Білатеральна стимуляція (типово — рухи очей за пальцем терапевта) під час пригадування травматичної події сприяє переробці спогаду так, що він втрачає емоційну гостроту.", critique:"Клінічна ефективність для ПТСР добре підтверджена, але науковий консенсус щодо того, чи потрібні саме рухи очей (а не просто структурована експозиція), досі не досягнутий — компонентні дослідження дають суперечливі результати.", sources:[{authors:"Shapiro, F.",year:"1989",title:"Efficacy of the eye movement desensitization procedure in the treatment of traumatic memories",url:"https://doi.org/10.1002/jts.2490020207"}]},
+  {id:"eft", name:"Терапія, сфокусована на емоціях (EFT)", fig:"Гринберг", rigor:"amber", claim:"Емоція — не перешкода для розв'язання проблеми, а первинний засіб зміни: терапія допомагає розрізняти адаптивні й дезадаптивні емоційні реакції та трансформувати другі через безпечне переживання перших.", critique:"Сильна доказова база в парній терапії (EFT-C Джонсон), дещо менша для індивідуального формату; теоретична мова 'первинних/вторинних' емоцій важко операціоналізується для дослідження.", sources:[{authors:"Greenberg, L.S.",year:"2004",title:"Emotion–focused therapy",url:"https://doi.org/10.1002/cpp.388"}]},
+  {id:"mbct", name:"Майндфулнес-когнітивна терапія (MBCT)", fig:"Сігал, Вільямс, Тісдейл", rigor:"green", claim:"Поєднує практики усвідомленості з когнітивною терапією для запобігання рецидиву депресії — навчає розпізнавати ранні патерни румінації як ментальні події, а не факти, до того як вони переростуть у повний епізод.", critique:"Найсильніші докази саме для профілактики рецидиву в людей із трьома і більше епізодами депресії в анамнезі; для гострого епізоду ефективність нижча за стандартну КПТ.", sources:[{authors:"Teasdale, J.D., Segal, Z.V., Williams, J.M.G. et al.",year:"2000",title:"Prevention of relapse/recurrence in major depression by mindfulness-based cognitive therapy",url:"https://doi.org/10.1037/0022-006X.68.4.615"}]},
+  {id:"mi", name:"Мотиваційне інтерв'ю", fig:"Міллер, Ролнік", rigor:"green", claim:"Замість переконувати людину змінитися, терапевт досліджує й підсилює власну амбівалентність клієнта щодо зміни — 'мова змін', яку людина промовляє вголос сама, передбачає реальну поведінкову зміну краще за зовнішній тиск.", critique:"Дуже добре підтверджена для залежностей і охорони здоров'я; ефект зазвичай помірний і найкраще працює як доповнення до інших інтервенцій, а не самостійна повна терапія.", sources:[{authors:"Miller, W.R. & Rollnick, S.",year:"1991",title:"Motivational Interviewing: Preparing People to Change Addictive Behavior",url:""}]}
 ]}
 ];
 
@@ -246,7 +265,9 @@ const CONNECTIONS = [
   ["skinner","beck"],["seligman","beck"],["cosmides","kahneman"],
   ["milgram","zimbardo"],["asch","tajfel"],["cialdini","skinner"],
   ["chomsky","vygotsky"],["kohlberg","erikson"],["csikszentmihalyi","sdt"],
-  ["zimbardo","tajfel"],["festinger","bandura"]
+  ["zimbardo","tajfel"],["festinger","bandura"],
+  ["dbt","panksepp"],["act","sdt"],["schema","attach"],["emdr","attach"],
+  ["eft","panksepp"],["mbct","beck"],["mi","festinger"]
 ];
 
 const grid = document.getElementById('grid');
@@ -348,6 +369,22 @@ function openPanel(n){
   document.getElementById('p-figures').textContent = n.fig;
   document.getElementById('p-claim').textContent = n.claim;
   document.getElementById('p-critique').textContent = n.critique;
+  const srcWrap = document.getElementById('p-sources');
+  srcWrap.innerHTML = '';
+  if(n.sources && n.sources.length){
+    const ul = document.createElement('ul');
+    ul.className = 'sources';
+    n.sources.forEach(s=>{
+      const li = document.createElement('li');
+      const esc = t => (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      const link = s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>` : esc(s.title);
+      li.innerHTML = `<span class="src-authors">${esc(s.authors)}</span> <span class="src-year">(${esc(s.year)})</span>. ${link}`;
+      ul.appendChild(li);
+    });
+    srcWrap.appendChild(ul);
+  } else {
+    srcWrap.innerHTML = '<div class="no-sources">Джерела для цього вузла ще не додані.</div>';
+  }
   const badge = document.getElementById('p-badge');
   badge.className = 'badge '+n.rigor;
   badge.textContent = n.rigor==='green'?'висока строгість':n.rigor==='amber'?'середня строгість':'нижча строгість';

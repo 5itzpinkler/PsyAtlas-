@@ -164,6 +164,14 @@ const _srcPP2 = {"depression": [{"authors": "Kendler, K.S., Karkowski, L.M. & Pr
 nodes.forEach(n=>{ if(_srcPP2[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcPP2[n.data.id]); });
 const _srcPP3 = {"circuitView": [{"authors": "Insel, T.R. & Cuthbert, B.N.", "year": "2015", "title": "Brain disorders? Precisely", "url": "https://doi.org/10.1126/science.aab2358"}], "eatingDisorders": [{"authors": "Treasure, J., Zipfel, S., Micali, N. et al.", "year": "2015", "title": "Anorexia nervosa", "url": "https://doi.org/10.1038/nrdp.2015.74"}]};
 nodes.forEach(n=>{ if(_srcPP3[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcPP3[n.data.id]); });
+// Лонгріди — розгорнуті тексти для окремих вузлів
+const _longreads = {
+  depression: {id:'depression', time:'~14 хв'}
+};
+nodes.forEach(n=>{
+  const lr = _longreads[n.data.id];
+  if(lr){ n.data.longread = lr.id; n.data.longread_time = lr.time; }
+});
 AtlasMap.build({nodes, edges, catColor, catLabel, layout:{rankSep:145, nodeSep:60}});
 </script>
 </body>

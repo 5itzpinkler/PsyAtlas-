@@ -91,6 +91,15 @@ const AtlasMap = (() => {
       a.innerHTML = 'Відкрити домен «'+esc(DOMAINS[n.jumpTo].title)+'» →';
       jumpWrap.appendChild(a);
     }
+    // Кнопка лонгріда — якщо для вузла написаний розгорнутий текст
+    if(n.longread){
+      const lr = document.createElement('a');
+      lr.className = 'longread-btn';
+      lr.href = 'longread.html?id=' + encodeURIComponent(n.longread);
+      lr.innerHTML = '<span class="lr-icon">◈</span><span class="lr-text">Читати лонгрід</span>'
+        + (n.longread_time ? '<span class="lr-time">'+esc(n.longread_time)+'</span>' : '');
+      jumpWrap.appendChild(lr);
+    }
 
     // Перехресні посилання на споріднені вузли/домени
     const xref = document.getElementById('p-xref');

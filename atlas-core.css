@@ -74,6 +74,17 @@ html,body{margin:0;height:100%;background:var(--bg);font-family:'IBM Plex Sans',
   text-decoration:none;font-size:13px;font-weight:500;transition:.15s;}
 #panel .jump:hover{border-color:var(--gold);background:var(--card-hover);}
 
+/* Кнопка лонгріда — головна дія, тому виразніша за решту */
+#panel .longread-btn{display:flex;align-items:center;gap:11px;margin-top:14px;
+  padding:14px 18px;background:linear-gradient(135deg, rgba(201,138,63,.13), rgba(201,138,63,.05));
+  border:1px solid var(--gold);border-radius:3px;color:var(--gold);
+  text-decoration:none;transition:.15s;}
+#panel .longread-btn:hover{background:linear-gradient(135deg, rgba(201,138,63,.22), rgba(201,138,63,.09));}
+#panel .longread-btn .lr-icon{font-size:15px;opacity:.85;}
+#panel .longread-btn .lr-text{font-size:14.5px;font-weight:600;letter-spacing:.01em;}
+#panel .longread-btn .lr-time{margin-left:auto;font-family:'IBM Plex Mono',monospace;
+  font-size:11px;color:var(--text-faint);}
+
 /* Ілюстрація вузла (портрет, схема, мікрофото) */
 #panel .node-figure{margin:0 0 22px;padding:0;}
 #panel .node-figure img{width:100%;max-width:420px;height:auto;display:block;

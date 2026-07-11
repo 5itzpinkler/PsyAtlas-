@@ -47,6 +47,48 @@ header p{color:var(--text-dim);font-size:15px;line-height:1.6;max-width:640px;ma
   .card{width:100%;max-width:340px;}
 }
 
+
+/* ============================================================
+   ПІРАМІДА — головна навігація атласу.
+   Знизу (молекулярний, найширший фундамент) догори
+   (психологія, найвужча вершина). Форма несе сенс:
+   нижні рівні фізично тримають на собі верхні.
+   ============================================================ */
+.pyramid-wrap{max-width:1100px;margin:10px auto 80px;padding:0 60px;
+  display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:start;}
+#pyramid{width:100%;height:auto;overflow:visible;}
+#pyramid .seg{cursor:pointer;transition:opacity .18s;}
+#pyramid .seg polygon{transition:fill .18s, stroke .18s;}
+#pyramid .seg:hover polygon{stroke:var(--gold);stroke-width:1.8;}
+#pyramid .seg.dim{opacity:.32;}
+#pyramid .seg-label{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:500;
+  fill:var(--text);pointer-events:none;}
+#pyramid .seg-tier{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.09em;
+  fill:var(--text-faint);pointer-events:none;text-transform:uppercase;}
+#pyramid .axis-line{stroke:var(--card-border);stroke-width:1;}
+#pyramid .axis-cap{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.09em;
+  fill:var(--text-faint);text-transform:uppercase;}
+
+.detail{background:var(--card);border:1px solid var(--card-border);border-radius:3px;
+  padding:26px 24px;position:sticky;top:30px;min-height:260px;}
+.detail .d-tier{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--gold);border-top:1px solid var(--gold);
+  border-bottom:1px solid var(--gold);display:inline-block;padding:4px 2px;margin-bottom:14px;}
+.detail h3{font-family:'Spectral',serif;font-weight:500;font-size:21px;margin:0 0 10px;line-height:1.25;}
+.detail p{font-size:13.5px;color:var(--text-dim);line-height:1.62;margin:0 0 18px;}
+.detail .d-count{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-faint);
+  margin-bottom:18px;}
+.detail .d-open{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;
+  background:var(--bg-soft);border:1px solid var(--card-border);border-radius:3px;
+  color:var(--gold);text-decoration:none;font-size:13px;font-weight:500;transition:.15s;}
+.detail .d-open:hover{border-color:var(--gold);background:var(--bg);}
+.detail .d-hint{font-size:12.5px;color:var(--text-faint);font-style:italic;line-height:1.6;}
+
+@media (max-width: 900px){
+  .pyramid-wrap{grid-template-columns:1fr;gap:26px;padding:0 22px;}
+  .detail{position:static;min-height:0;}
+}
+
 .gs-trigger{background:var(--card);border:1px solid var(--card-border);color:var(--text-dim);
   border-radius:3px;padding:0 16px;height:44px;font-size:14px;cursor:pointer;display:flex;
   align-items:center;gap:9px;transition:.15s;margin-top:20px;}
@@ -95,108 +137,131 @@ mark{background:rgba(201,138,63,.35);color:inherit;border-radius:3px;padding:0 1
   <button class="gs-trigger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="gs-label-text">Пошук по всьому атласу — 222 вузли</span><kbd>/</kbd></button>
 </header>
 
-<div class="axis">
+<div class="pyramid-wrap">
 
-  <div class="tier">
-    <div class="tier-label">Молекулярний</div>
-    <div class="cards">
-      <a class="card active" href="synapse.html">
-        <span class="status live">live</span>
-        <h3>Синаптична нейротрансмісія</h3>
-        <p>Синтез і деградація дофаміну, серотоніну, ГАМК/глутамату, ацетилхоліну; рецептори, другі посередники, везикулярний цикл.</p>
-      </a>
-    </div>
-  </div>
+  <svg id="pyramid" viewBox="0 0 660 616" xmlns="http://www.w3.org/2000/svg">
+    <!-- вертикальна вісь абстракції -->
+    <line class="axis-line" x1="14" y1="30" x2="14" y2="576"/>
+    <text class="axis-cap" x="14" y="18" text-anchor="middle">психіка</text>
+    <text class="axis-cap" x="14" y="598" text-anchor="middle">молекула</text>
+    <g class="seg" data-id="psychology" data-file="psychology_atlas.html" data-tier="Поведінка"
+       data-title="Атлас психологічних теорій" data-desc="58 теорій у 13 школах — від психоаналізу до клінічних модальностей. Колір-кодована наукова строгість, містки між школами." data-count="58">
+      <polygon points="275.0,30 405.0,30 432.2,88 247.8,88" fill="#c98a3f" fill-opacity="0.20" stroke="#c98a3f" stroke-width="1"/>
+      <text class="seg-tier" x="340" y="53" text-anchor="middle">Поведінка</text>
+      <text class="seg-label" x="340" y="70" text-anchor="middle">Психологія</text>
+    </g>
+    <g class="seg" data-id="psychopathology" data-file="psychopathology.html" data-tier="Патологія"
+       data-title="Психопатологія як збій контурів" data-desc="Депресія, психоз, тривога, ПТСР, ОКР, залежність, СДУГ, вигорання — кожен розлад як розсинхронізація контурів з нижніх рівнів." data-count="13">
+      <polygon points="247.8,91 432.2,91 459.4,149 220.6,149" fill="#c07a52" fill-opacity="0.20" stroke="#c07a52" stroke-width="1"/>
+      <text class="seg-tier" x="340" y="114" text-anchor="middle">Патологія</text>
+      <text class="seg-label" x="340" y="131" text-anchor="middle">Психопатологія</text>
+    </g>
+    <g class="seg" data-id="development" data-file="development.html" data-tier="Розвиток"
+       data-title="Нейророзвиток" data-desc="Пренатальне формування, критичні й сенситивні періоди, синаптичний прунінг, мієлінізація, когнітивний резерв." data-count="14">
+      <polygon points="220.6,152 459.4,152 486.7,210 193.3,210" fill="#b56b62" fill-opacity="0.20" stroke="#b56b62" stroke-width="1"/>
+      <text class="seg-tier" x="340" y="175" text-anchor="middle">Розвиток</text>
+      <text class="seg-label" x="340" y="192" text-anchor="middle">Нейророзвиток</text>
+    </g>
+    <g class="seg" data-id="consciousness" data-file="consciousness.html" data-tier="Свідомість"
+       data-title="Арузал і свідомість" data-desc="Дві осі свідомості, таламокортикальні петлі, розлади свідомості, конкуруючі теорії (GNWT, IIT, HOT), важка проблема Чалмерса." data-count="15">
+      <polygon points="193.3,213 486.7,213 513.9,271 166.1,271" fill="#a45f6e" fill-opacity="0.20" stroke="#a45f6e" stroke-width="1"/>
+      <text class="seg-tier" x="340" y="236" text-anchor="middle">Свідомість</text>
+      <text class="seg-label" x="340" y="253" text-anchor="middle">Арузал і свідомість</text>
+    </g>
+    <g class="seg" data-id="cognition" data-file="cognition.html" data-tier="Когнітивний"
+       data-title="Увага, память, мова" data-desc="Три мережі уваги за Познером, системи памʼяті, виконавчі функції, зони Брока й Верніке." data-count="13">
+      <polygon points="166.1,274 513.9,274 541.1,332 138.9,332" fill="#8f5a76" fill-opacity="0.20" stroke="#8f5a76" stroke-width="1"/>
+      <text class="seg-tier" x="340" y="297" text-anchor="middle">Когнітивний</text>
+      <text class="seg-label" x="340" y="314" text-anchor="middle">Увага, память, мова</text>
+    </g>
+    <g class="seg" data-id="affect" data-file="affect.html" data-tier="Афективний"
+       data-title="Афективні контури" data-desc="Сім базових емоційних систем Панксеппа, HPA-вісь, каскад кортизолу, алостатичне навантаження." data-count="14">
+      <polygon points="138.9,335 541.1,335 568.3,393 111.7,393" fill="#77597c" fill-opacity="0.20" stroke="#77597c" stroke-width="1"/>
+      <text class="seg-tier" x="340" y="358" text-anchor="middle">Афективний</text>
+      <text class="seg-label" x="340" y="375" text-anchor="middle">Афективні контури</text>
+    </g>
+    <g class="seg" data-id="circuits" data-file="circuits.html" data-tier="Контурний"
+       data-title="Нейроанатомічні контури" data-desc="Коло Папеца, пряма й непряма ланки базальних гангліїв, мезолімбічний і мезокортикальний шляхи, ARAS. Анатомічний макет." data-count="26">
+      <polygon points="111.7,396 568.3,396 595.6,454 84.4,454" fill="#5f5b7e" fill-opacity="0.20" stroke="#5f5b7e" stroke-width="1"/>
+      <text class="seg-tier" x="340" y="419" text-anchor="middle">Контурний</text>
+      <text class="seg-label" x="340" y="436" text-anchor="middle">Нейроанатомічні контури</text>
+    </g>
+    <g class="seg" data-id="membrane" data-file="membrane.html" data-tier="Клітинний"
+       data-title="Мембрана і потенціал дії" data-desc="Потенціал спокою, деполяризація, сальтаторне проведення, LTP/LTD, дорослий нейрогенез." data-count="28">
+      <polygon points="84.4,457 595.6,457 622.8,515 57.2,515" fill="#4a5c7c" fill-opacity="0.20" stroke="#4a5c7c" stroke-width="1"/>
+      <text class="seg-tier" x="340" y="480" text-anchor="middle">Клітинний</text>
+      <text class="seg-label" x="340" y="497" text-anchor="middle">Мембрана і потенціал дії</text>
+    </g>
+    <g class="seg" data-id="synapse" data-file="synapse.html" data-tier="Молекулярний"
+       data-title="Синаптична нейротрансмісія" data-desc="Синтез і деградація дофаміну, серотоніну, ГАМК/глутамату, ацетилхоліну; рецептори, другі посередники, везикулярний цикл." data-count="57">
+      <polygon points="57.2,518 622.8,518 650.0,576 30.0,576" fill="#3d5c72" fill-opacity="0.20" stroke="#3d5c72" stroke-width="1"/>
+      <text class="seg-tier" x="340" y="541" text-anchor="middle">Молекулярний</text>
+      <text class="seg-label" x="340" y="558" text-anchor="middle">Синаптична нейротрансмісія</text>
+    </g>
+  </svg>
 
-  <div class="tier">
-    <div class="tier-label">Клітинний</div>
-    <div class="cards">
-      <a class="card active" href="membrane.html">
-        <span class="status live">live</span>
-        <h3>Мембрана і потенціал дії</h3>
-        <p>Потенціал спокою, деполяризація, сальтаторне проведення, LTP/LTD, дорослий нейрогенез.</p>
-      </a>
-    </div>
-  </div>
-
-  <div class="tier">
-    <div class="tier-label">Контурний</div>
-    <div class="cards">
-      <a class="card active" href="circuits.html">
-        <span class="status live">live</span>
-        <h3>Нейроанатомічні контури</h3>
-        <p>Коло Папеца, пряма/непряма ланки базальних гангліїв, мезолімбічний/мезокортикальний шлях, ARAS.</p>
-      </a>
-    </div>
-  </div>
-
-  <div class="tier">
-    <div class="tier-label">Афективний</div>
-    <div class="cards">
-      <a class="card active" href="affect.html">
-        <span class="status live">live</span>
-        <h3>Афективні контури</h3>
-        <p>Сім систем Панксеппа, HPA-вісь, каскад кортизолу, алостатичне навантаження.</p>
-      </a>
-    </div>
-  </div>
-
-  <div class="tier">
-    <div class="tier-label">Когнітивний</div>
-    <div class="cards">
-      <a class="card active" href="cognition.html">
-        <span class="status live">live</span>
-        <h3>Увага, память, мова</h3>
-        <p>Три мережі уваги, системи памʼяті, виконавчі функції, зони Брока й Верніке.</p>
-      </a>
-    </div>
-  </div>
-
-  <div class="tier">
-    <div class="tier-label">Свідомість</div>
-    <div class="cards">
-      <a class="card active" href="consciousness.html">
-        <span class="status live">live</span>
-        <h3>Арузал і свідомість</h3>
-        <p>Дві осі свідомості, таламокортикальні петлі, розлади свідомості, конкуруючі теорії (GNWT, IIT, HOT), важка проблема.</p>
-      </a>
-    </div>
-  </div>
-
-  <div class="tier">
-    <div class="tier-label">Розвиток</div>
-    <div class="cards">
-      <a class="card active" href="development.html">
-        <span class="status live">live</span>
-        <h3>Нейророзвиток</h3>
-        <p>Пренатальне формування, критичні й сенситивні періоди, прунінг, мієлінізація, когнітивний резерв.</p>
-      </a>
-    </div>
-  </div>
-
-  <div class="tier">
-    <div class="tier-label">Патологія</div>
-    <div class="cards">
-      <a class="card active" href="psychopathology.html">
-        <span class="status live">live</span>
-        <h3>Психопатологія як збій контурів</h3>
-        <p>Депресія, психоз, тривога, ПТСР, ОКР, залежність — кожен розлад як розсинхронізація контурів з інших доменів.</p>
-      </a>
-    </div>
-  </div>
-
-  <div class="tier">
-    <div class="tier-label">Поведінка</div>
-    <div class="cards">
-      <a class="card active" href="psychology_atlas.html">
-        <span class="status live">live</span>
-        <h3>Атлас психологічних теорій</h3>
-        <p>39 теорій, 10 шкіл думки, колір-кодована строгість, містки між школами.</p>
-      </a>
-    </div>
-  </div>
+  <aside class="detail" id="detail">
+    <div class="d-tier" id="d-tier">Атлас</div>
+    <h3 id="d-title">Дев'ять рівнів</h3>
+    <p id="d-desc">Кожен рівень пояснюється тим, що під ним, і пояснює те, що над ним. Наведи курсор на сегмент піраміди, щоб побачити деталі, або клікни, щоб відкрити карту.</p>
+    <div class="d-count" id="d-count">233 вузли · 100% з джерелами</div>
+    <a class="d-open" id="d-open" href="psychology_atlas.html" style="display:none;">Відкрити карту →</a>
+    <div class="d-hint" id="d-hint">Психологія — угорі не тому, що важливіша, а тому, що найдалі від молекули: вона спирається на все, що нижче.</div>
+  </aside>
 
 </div>
+
+<script>
+(function(){
+  const detail = {
+    tier: document.getElementById('d-tier'),
+    title: document.getElementById('d-title'),
+    desc: document.getElementById('d-desc'),
+    count: document.getElementById('d-count'),
+    open: document.getElementById('d-open'),
+    hint: document.getElementById('d-hint')
+  };
+  const segs = document.querySelectorAll('#pyramid .seg');
+  const DEFAULT = {
+    tier:'Атлас', title:"Дев'ять рівнів",
+    desc:'Кожен рівень пояснюється тим, що під ним, і пояснює те, що над ним. Наведи курсор на сегмент піраміди, щоб побачити деталі, або клікни, щоб відкрити карту.',
+    count:'233 вузли · 100% з джерелами'
+  };
+
+  function show(seg){
+    segs.forEach(s => s.classList.toggle('dim', s !== seg));
+    detail.tier.textContent = seg.dataset.tier;
+    detail.title.textContent = seg.dataset.title;
+    detail.desc.textContent = seg.dataset.desc;
+    detail.count.textContent = seg.dataset.count + ' вузлів · усі з джерелами';
+    detail.open.href = seg.dataset.file;
+    detail.open.style.display = 'inline-flex';
+    detail.hint.style.display = 'none';
+  }
+  function reset(){
+    segs.forEach(s => s.classList.remove('dim'));
+    detail.tier.textContent = DEFAULT.tier;
+    detail.title.textContent = DEFAULT.title;
+    detail.desc.textContent = DEFAULT.desc;
+    detail.count.textContent = DEFAULT.count;
+    detail.open.style.display = 'none';
+    detail.hint.style.display = 'block';
+  }
+
+  segs.forEach(seg => {
+    seg.addEventListener('mouseenter', () => show(seg));
+    seg.addEventListener('click', () => { window.location.href = seg.dataset.file; });
+    // клавіатурна доступність
+    seg.setAttribute('tabindex', '0');
+    seg.setAttribute('role', 'link');
+    seg.addEventListener('focus', () => show(seg));
+    seg.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); window.location.href = seg.dataset.file; }
+    });
+  });
+  document.getElementById('pyramid').addEventListener('mouseleave', reset);
+})();
+</script>
 
 <script src="search-index.js"></script>
 <script src="global-search.js"></script>

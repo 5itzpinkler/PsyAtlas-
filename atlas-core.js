@@ -31,6 +31,29 @@ const AtlasMap = (() => {
 
   function openPanel(n){
     document.getElementById('p-name').textContent = n.label;
+
+    // Ілюстрація вузла (портрет дослідника, схема, мікрофото) — з фолбеком.
+    // Заповнюється через n.figure = {src, caption} у даних домену.
+    const figWrap = document.getElementById('p-figure');
+    if(figWrap){
+      figWrap.innerHTML = '';
+      if(n.figure && n.figure.src){
+        const fig = document.createElement('figure');
+        fig.className = 'node-figure';
+        const img = document.createElement('img');
+        img.src = n.figure.src;
+        img.alt = n.figure.caption || n.label;
+        img.onerror = () => { fig.remove(); };  // не показуємо зламане
+        fig.appendChild(img);
+        if(n.figure.caption){
+          const cap = document.createElement('figcaption');
+          cap.textContent = n.figure.caption;
+          fig.appendChild(cap);
+        }
+        figWrap.appendChild(fig);
+      }
+    }
+
     const badge = document.getElementById('p-badge');
     badge.textContent = CATLABEL[n.cat] || n.cat;
     badge.style.color = CATCOLOR[n.cat] || '#7d8399';

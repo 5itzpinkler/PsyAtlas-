@@ -76,13 +76,14 @@ html,body{margin:0;height:100%;background:var(--bg);font-family:'IBM Plex Sans',
 
 /* Секція джерел */
 #panel .sources{list-style:none;margin:0;padding:0;}
-#panel .sources li{font-size:13.5px;line-height:1.6;color:var(--text-dim);margin:0 0 12px;
-  padding-left:20px;position:relative;}
+#panel .sources li{font-size:13.5px;line-height:1.62;color:var(--text-dim);margin:0 0 13px;
+  padding-left:20px;position:relative;overflow-wrap:break-word;word-break:break-word;}
 #panel .sources li::before{content:'—';position:absolute;left:0;color:var(--gold);}
 #panel .sources .src-authors{color:var(--text);font-weight:500;}
-#panel .sources .src-year{color:var(--text-faint);font-family:'IBM Plex Mono',monospace;}
-#panel .sources a{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-soft);}
-#panel .sources a:hover{border-bottom-style:solid;}
+#panel .sources .src-year{color:var(--text-faint);font-family:'IBM Plex Mono',monospace;font-size:12.5px;}
+#panel .sources a{color:var(--gold);text-decoration:none;border-bottom:1px dotted var(--gold-soft);
+  transition:border-color .15s;}
+#panel .sources a:hover{border-bottom-style:solid;border-bottom-color:var(--gold);}
 #panel .no-sources{font-size:13px;color:var(--text-faint);font-style:italic;}
 
 #panel .xref{margin-top:18px;}

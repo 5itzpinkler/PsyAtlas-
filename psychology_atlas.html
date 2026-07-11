@@ -161,6 +161,10 @@ mark{background:rgba(201,138,63,.35);color:inherit;border-radius:3px;padding:0 1
   .gs-item .gs-domain{display:none;}
   #toolbar{flex-wrap:wrap;}
 }
+#legend .attrib{margin-top:12px;padding-top:10px;border-top:1px solid var(--border-soft);
+  font-size:10.5px;color:var(--text-faint);line-height:1.5;}
+#legend .attrib a{color:var(--text-dim);text-decoration:none;border-bottom:1px dotted var(--text-faint);}
+#legend .attrib a:hover{color:var(--gold);border-bottom-color:var(--gold);}
 </style>
 </head>
 <body>
@@ -178,6 +182,7 @@ mark{background:rgba(201,138,63,.35);color:inherit;border-radius:3px;padding:0 1
   <div class="row" onclick="filterRigor('green')"><span class="dot green"></span>формалізована, висока емпірична база</div>
   <div class="row" onclick="filterRigor('amber')"><span class="dot amber"></span>валідна, менш формалізована</div>
   <div class="row" onclick="filterRigor('coral')"><span class="dot coral"></span>історична спадщина, слабша строгість</div>
+  <div class="attrib">Портрети: <a href="https://openstax.org/details/books/psychology" target="_blank" rel="noopener">OpenStax, «Psychology»</a> · CC BY 3.0</div>
 </div>
 
 <div id="hint">Тягни щоб пересуватись · колесо миші щоб зумити<br>клікни вузол для деталей</div>

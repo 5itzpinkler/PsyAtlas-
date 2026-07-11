@@ -53,7 +53,9 @@ const AtlasMap = (() => {
         });
         srcWrap.appendChild(ul);
       } else {
-        srcWrap.innerHTML = '<div class="no-sources">Джерела для цього вузла ще не додані.</div>';
+        srcWrap.innerHTML = n.stub
+          ? '<div class="no-sources">Це вузол-місток. Джерела — у домені, куди він веде.</div>'
+          : '<div class="no-sources">Джерела для цього вузла ще не додані.</div>';
       }
     }
 

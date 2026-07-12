@@ -136,24 +136,41 @@ const AtlasMap = (() => {
       elements: {nodes: cfg.nodes, edges: cfg.edges},
       style: [
         {selector:'node', style:{
-          'background-color': ele => CATCOLOR[ele.data('cat')] || '#7d8399',
+          'background-color': ele => CATCOLOR[ele.data('cat')] || '#7d6a5e',
           'shape': ele => ele.data('shape') || 'ellipse',
-          'label':'data(label)','color':'#f0ece1','font-size':11.5,'font-family':'Manrope','font-weight':500,
-          'text-valign':'bottom','text-margin-y':8,'width':24,'height':24,
-          'border-width':1.5,'border-color':'#0f111a','text-wrap':'wrap','text-max-width':135,
-          'text-background-color':'#0f111a','text-background-opacity':0.72,'text-background-padding':2.5,
-          'text-background-shape':'roundrectangle'
+          'label':'data(label)','color':'#ede2d3','font-size':11,
+          'font-family':'IBM Plex Sans, sans-serif','font-weight':500,
+          'text-valign':'bottom','text-margin-y':9,'width':26,'height':26,
+          'border-width':1.5,'border-color':'#1a1013','text-wrap':'wrap','text-max-width':140,
+          'text-background-color':'#1a1013','text-background-opacity':0.82,'text-background-padding':3,
+          'text-background-shape':'roundrectangle',
+          'transition-property':'border-width, border-color, opacity',
+          'transition-duration':'110ms'
         }},
-        {selector:'node[?stub]', style:{'border-style':'dashed','border-width':2,'border-color':'#6b7089'}},
+        {selector:'node[?stub]', style:{'border-style':'dashed','border-width':2,'border-color':'#7d6a5e'}},
         {selector:'edge', style:{
-          'width':1.2,'line-color':'var(--edge, #4a5070)','target-arrow-color':'#4a5070',
-          'target-arrow-shape':'triangle','curve-style':'bezier','arrow-scale':0.85,
-          'label':'data(label)','font-size':9,'color':'#8a90a8','font-family':'Manrope',
-          'text-background-color':'#0f111a','text-background-opacity':0.88,'text-background-padding':2
+          'width':1.1,'line-color':'#5a4048','target-arrow-color':'#6b4d56',
+          'target-arrow-shape':'triangle','curve-style':'bezier','arrow-scale':0.9,
+          'label':'data(label)','font-size':9,'color':'#b3a292',
+          'font-family':'IBM Plex Sans, sans-serif',
+          'text-background-color':'#1a1013','text-background-opacity':0.9,'text-background-padding':3,
+          'text-background-shape':'roundrectangle','text-rotation':'autorotate',
+          'transition-property':'line-color, width, opacity','transition-duration':'110ms'
         }},
         {selector:'.dim', style:{'opacity':0.05}},
-        {selector:'.hl', style:{'border-width':3,'border-color':'#c9a05e','width':30,'height':30}},
-        {selector:'.faded', style:{'opacity':0.28}}
+        {selector:'.hl', style:{'border-width':3,'border-color':'#c98a3f','width':30,'height':30}},
+        {selector:'.faded', style:{'opacity':0.28}},
+
+        // Підсвітка сусідства при наведенні
+        {selector:'.faded-hood', style:{'opacity':0.13}},
+        {selector:'node.in-hood', style:{
+          'border-width':2, 'border-color':'#c98a3f', 'z-index':10
+        }},
+        {selector:'edge.in-hood', style:{
+          'line-color':'#c98a3f', 'target-arrow-color':'#c98a3f',
+          'width':2, 'color':'#ede2d3', 'z-index':10,
+          'text-opacity':1   // підпис ребра видно завжди, коли воно в сусідстві
+        }}
       ],
       layout:{name:'preset'}, minZoom:0.12, maxZoom:2.6,
       wheelSensitivity:0.25
@@ -173,17 +190,77 @@ const AtlasMap = (() => {
       cy.fit(null, 85);
     }
 
-    // Текст завжди читабельний на екрані незалежно від рівня зуму графа —
-    // без цього щільні домени (57 вузлів) стискаються до нечитабельних 4px.
-    const SCREEN_PX = 12.5, MIN_GRAPH_PX = 7, MAX_GRAPH_PX = 60;
+    // ── ЧИТАБЕЛЬНІСТЬ ПІДПИСІВ ──
+    // Логіка: підпис ніколи не менший за читабельний мінімум на екрані,
+    // АЛЕ росте, коли наближаєш. Попередня версія робила його константним —
+    // тобто зум углиб не давав збільшення, що суперечило очікуванню.
+    //   graphPx = max(MIN_SCREEN / zoom, BASE)
+    //   → при малому зумі: тримає мінімум читабельності
+    //   → при великому:    росте природно, як і має бути
+    const NODE_MIN_SCREEN = 12.5, NODE_BASE = 11;
+    const EDGE_MIN_SCREEN = 11.5, EDGE_BASE = 9;
+
+    // Рівень деталізації (LOD): підписи ребер — це дрібний шар,
+    // що при віддаленні перетворюється на візуальний шум. Ховаємо їх,
+    // поки не наблизишся достатньо, щоб вони справді читались.
+    const EDGE_LABEL_ZOOM = 0.62;
+
     function rescaleLabels(){
       const z = cy.zoom();
-      const graphPx = Math.min(MAX_GRAPH_PX, Math.max(MIN_GRAPH_PX, SCREEN_PX / z));
-      cy.style().selector('node').style('font-size', graphPx).update();
-      cy.style().selector('edge').style('font-size', Math.min(MAX_GRAPH_PX*0.8, Math.max(MIN_GRAPH_PX*0.7, SCREEN_PX*0.8/z))).update();
+      const nodePx = Math.max(NODE_MIN_SCREEN / z, NODE_BASE);
+      const edgePx = Math.max(EDGE_MIN_SCREEN / z, EDGE_BASE);
+      const showEdgeLabels = z >= EDGE_LABEL_ZOOM;
+
+      cy.style()
+        .selector('node').style('font-size', nodePx)
+        .selector('edge').style({
+          'font-size': edgePx,
+          'text-opacity': showEdgeLabels ? 1 : 0
+        })
+        .update();
     }
     cy.on('zoom', rescaleLabels);
     rescaleLabels();
+
+    // Підказка про рівень деталізації — щоб було зрозуміло,
+    // що підписи ребер не зникли назавжди, а з'являються при наближенні
+    const lodHint = document.getElementById('lod-hint');
+    if(lodHint){
+      function updateLod(){
+        const near = cy.zoom() >= EDGE_LABEL_ZOOM;
+        lodHint.classList.toggle('lod-on', near);
+        lodHint.textContent = near
+          ? 'підписи зв\u2019язків видно'
+          : 'наблизь, щоб побачити підписи зв\u2019язків';
+      }
+      cy.on('zoom', updateLod);
+      updateLod();
+    }
+
+    // ── ВУЗЛИ НЕ ПЕРЕТЯГУЮТЬСЯ ──
+    // Розкладка (особливо анатомічна в circuits.html) вивірена вручну —
+    // випадкове перетягування пальцем ламає її незворотно.
+    // Панорамування й зум лишаються: досліджувати граф можна вільно.
+    cy.autoungrabify(true);
+
+    // ── ПІДСВІТКА СУСІДСТВА ──
+    // Наведення на вузол показує рівно те, з чим він пов'язаний:
+    // сам вузол, його сусіди й ребра між ними. Решта графа гасне.
+    // Це головний просторовий інструмент: одразу видно контур,
+    // до якого належить вузол, без читання всього графа.
+    let hoverTimer = null;
+    cy.on('mouseover', 'node', evt => {
+      clearTimeout(hoverTimer);
+      const n = evt.target;
+      const hood = n.closedNeighborhood();
+      cy.elements().difference(hood).addClass('faded-hood');
+      hood.addClass('in-hood');
+    });
+    cy.on('mouseout', 'node', () => {
+      hoverTimer = setTimeout(() => {
+        cy.elements().removeClass('faded-hood in-hood');
+      }, 60);
+    });
 
     // Синхронізація фонової анатомічної ілюстрації (якщо є #cy-bg-layer)
     // з панорамуванням/зумом графа — та сама математика, що й у cytoscape:
@@ -237,5 +314,13 @@ const AtlasMap = (() => {
     return cy;
   }
 
-  return {build, closePanel, zoomBy:(f)=>cy.zoom(cy.zoom()*f), fit:()=>cy.fit(null,85)};
+  return {
+    build, closePanel,
+    zoomBy: (f) => {
+      const z = Math.max(cy.minZoom(), Math.min(cy.maxZoom(), cy.zoom() * f));
+      cy.animate({ zoom: {level: z, renderedPosition: {x: cy.width()/2, y: cy.height()/2}} },
+                 { duration: 180, easing: 'ease-out' });
+    },
+    fit: () => cy.animate({ fit: {padding: 70} }, { duration: 260, easing: 'ease-out' })
+  };
 })();

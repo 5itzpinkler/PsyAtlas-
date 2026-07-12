@@ -33,6 +33,19 @@ html,body{margin:0;height:100%;background:var(--bg);font-family:'IBM Plex Sans',
 .zoombtn:hover{border-color:var(--gold);color:var(--gold);}
 
 #cy{position:absolute;top:0;left:0;right:0;bottom:0;}
+
+/* Індикатор рівня деталізації — пояснює, чому підписи зв'язків
+   з'являються лише при наближенні (це навмисно, а не баг) */
+#lod-hint{position:fixed;bottom:22px;right:24px;z-index:12;
+  font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.04em;
+  color:var(--text-faint);background:var(--card);border:1px solid var(--border-soft);
+  border-radius:2px;padding:7px 12px;transition:.2s;pointer-events:none;
+  display:flex;align-items:center;gap:7px;}
+#lod-hint::before{content:'';width:5px;height:5px;border-radius:50%;
+  background:var(--text-faint);transition:.2s;}
+#lod-hint.lod-on{color:var(--sage);border-color:rgba(124,143,112,.35);}
+#lod-hint.lod-on::before{background:var(--sage);}
+@media (max-width: 640px){ #lod-hint{display:none;} }
 #loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
   color:var(--text-faint);font-size:13px;z-index:30;background:var(--bg);letter-spacing:.03em;}
 

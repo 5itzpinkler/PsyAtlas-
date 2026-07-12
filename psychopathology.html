@@ -66,6 +66,49 @@
   <div class="xref" id="p-xref"></div>
 </div>
 
+<div id="cy-bg" style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;">
+  <div id="cy-bg-layer" style="position:absolute;top:0;left:0;width:1010px;height:780px;transform-origin:0 0;">
+    <svg width="1010" height="780" viewBox="0 0 1010 780" style="overflow:visible;">
+      <defs><pattern id="dots" width="34" height="34" patternUnits="userSpaceOnUse">
+        <circle cx="17" cy="17" r="1" fill="#3a2229" opacity="0.55"/></pattern></defs>
+      <rect x="-300" y="-200" width="1900" height="1500" fill="url(#dots)"/>
+
+      <!-- РАМКИ РОЗУМІННЯ (верх) -->
+      <rect x="60" y="30" width="880" height="200" fill="#5fb583" fill-opacity="0.04"
+            stroke="#5fb583" stroke-width="1.3" stroke-opacity="0.35" stroke-dasharray="6 6" rx="3"/>
+      <text x="70" y="20" font-size="13" fill="#5fb583" opacity="0.8" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.09em">РАМКИ РОЗУМІННЯ</text>
+      <text x="290" y="20" font-size="10.5" fill="#7d6a5e" opacity="0.7" font-family="IBM Plex Sans">як взагалі думати про розлад</text>
+
+      <!-- ТРИ ЗОНИ ЗБОЮ -->
+      <ellipse cx="185" cy="480" rx="150" ry="150" fill="#6b9fd6" fill-opacity="0.06"
+               stroke="#6b9fd6" stroke-width="1.3" stroke-opacity="0.4" stroke-dasharray="6 6"/>
+      <text x="185" y="300" text-anchor="middle" font-size="12.5" fill="#6b9fd6" opacity="0.85"
+            font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.08em">АФЕКТИВНА ВІСЬ</text>
+      <text x="185" y="318" text-anchor="middle" font-size="10.5" fill="#7d6a5e" opacity="0.7"
+            font-family="IBM Plex Sans">моноаміни · HPA · DMN</text>
+
+      <ellipse cx="480" cy="465" rx="130" ry="140" fill="#c986ab" fill-opacity="0.06"
+               stroke="#c986ab" stroke-width="1.3" stroke-opacity="0.4" stroke-dasharray="6 6"/>
+      <text x="480" y="300" text-anchor="middle" font-size="12.5" fill="#c986ab" opacity="0.85"
+            font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.08em">ДОФАМІНОВА ВІСЬ</text>
+      <text x="480" y="318" text-anchor="middle" font-size="10.5" fill="#7d6a5e" opacity="0.7"
+            font-family="IBM Plex Sans">мезолімбічний · мезокортикальний</text>
+
+      <ellipse cx="790" cy="470" rx="175" ry="165" fill="#d9a94f" fill-opacity="0.06"
+               stroke="#d9a94f" stroke-width="1.3" stroke-opacity="0.4" stroke-dasharray="6 6"/>
+      <text x="790" y="288" text-anchor="middle" font-size="12.5" fill="#d9a94f" opacity="0.85"
+            font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.08em">ВІСЬ ЗАГРОЗИ Й КОНТРОЛЮ</text>
+      <text x="790" y="306" text-anchor="middle" font-size="10.5" fill="#7d6a5e" opacity="0.7"
+            font-family="IBM Plex Sans">мигдалина · ПФК · стріатум</text>
+
+      <!-- Смуга перекриття -->
+      <text x="490" y="740" text-anchor="middle" font-size="11" fill="#7d6a5e" opacity="0.6"
+            font-family="IBM Plex Sans" font-style="italic">Розлади на межі зон мають змішаний механізм — це не помилка класифікації, а сама природа психопатології</text>
+
+    </svg>
+  </div>
+</div>
 <div id="lod-hint"></div>
 <div id="cy"></div>
 
@@ -139,6 +182,9 @@ N('addiction','Залежність','anxiety',{shape:'ellipse',
   xref:[{domain:'circuits',focus:'vta',label:'VTA — джерело дофаміну'},{domain:'affect',focus:'seeking',label:'SEEKING — тяга vs задоволення'},{domain:'cognition',focus:'inhibition',label:'Ослаблення контролю ПФК'}]})
 ];
 
+const _pos = {"circuitView": {"x": 480, "y": 80}, "diathesisStress": {"x": 200, "y": 190}, "rdoc": {"x": 760, "y": 190}, "depression": {"x": 180, "y": 400}, "bipolar": {"x": 180, "y": 530}, "schizophrenia": {"x": 480, "y": 400}, "anxiety": {"x": 760, "y": 340}, "ptsd": {"x": 700, "y": 470}, "ocd": {"x": 880, "y": 470}, "adhd": {"x": 480, "y": 530}, "burnout": {"x": 320, "y": 650}, "eatingDisorders": {"x": 640, "y": 650}, "addiction": {"x": 880, "y": 600}};
+nodes.forEach(n=>{ if(_pos[n.data.id]) n.position = _pos[n.data.id]; });
+
 const edges = [
 E('circuitView','diathesisStress'),E('circuitView','rdoc'),
 E('circuitView','depression'),E('circuitView','schizophrenia'),E('circuitView','anxiety'),
@@ -173,7 +219,7 @@ nodes.forEach(n=>{
   const lr = _longreads[n.data.id];
   if(lr){ n.data.longread = lr.id; n.data.longread_time = lr.time; }
 });
-AtlasMap.build({nodes, edges, catColor, catLabel, layout:{rankSep:145, nodeSep:60}});
+AtlasMap.build({nodes, edges, catColor, catLabel, presetPositions:true});
 </script>
 </body>
 </html>

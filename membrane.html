@@ -57,6 +57,56 @@
   <div class="xref" id="p-xref"></div>
 </div>
 
+<div id="cy-bg" style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;">
+  <div id="cy-bg-layer" style="position:absolute;top:0;left:0;width:1300px;height:900px;transform-origin:0 0;">
+    <svg width="1300" height="900" viewBox="-40 0 1300 900" style="overflow:visible;">
+      <defs>
+        <pattern id="dots" width="34" height="34" patternUnits="userSpaceOnUse">
+          <circle cx="17" cy="17" r="1" fill="#3a2229" opacity="0.55"/>
+        </pattern>
+      </defs>
+      <rect x="-200" y="-100" width="1700" height="1200" fill="url(#dots)"/>
+
+      <!-- ПОЗАКЛІТИННИЙ ПРОСТІР -->
+      <rect x="-20" y="30" width="620" height="140" fill="#6b9fd6" fill-opacity="0.045"
+            stroke="#6b9fd6" stroke-width="1.2" stroke-opacity="0.3" stroke-dasharray="5 5"/>
+      <text x="-10" y="20" font-size="13" fill="#6b9fd6" opacity="0.75" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.1em">ПОЗАКЛІТИННИЙ ПРОСТІР</text>
+
+      <!-- ЛІПІДНИЙ БІШАР — дві лінії з "головками" -->
+      <rect x="-20" y="185" width="620" height="80" fill="#d9a94f" fill-opacity="0.07"
+            stroke="none"/>
+      <line x1="-20" y1="185" x2="600" y2="185" stroke="#d9a94f" stroke-width="2" opacity="0.55"/>
+      <line x1="-20" y1="265" x2="600" y2="265" stroke="#d9a94f" stroke-width="2" opacity="0.55"/>
+      <g fill="#d9a94f" opacity="0.35"><circle cx="-10" cy="192" r="3.5"/><circle cx="-10" cy="258" r="3.5"/><circle cx="12" cy="192" r="3.5"/><circle cx="12" cy="258" r="3.5"/><circle cx="34" cy="192" r="3.5"/><circle cx="34" cy="258" r="3.5"/><circle cx="56" cy="192" r="3.5"/><circle cx="56" cy="258" r="3.5"/><circle cx="78" cy="192" r="3.5"/><circle cx="78" cy="258" r="3.5"/><circle cx="100" cy="192" r="3.5"/><circle cx="100" cy="258" r="3.5"/><circle cx="122" cy="192" r="3.5"/><circle cx="122" cy="258" r="3.5"/><circle cx="144" cy="192" r="3.5"/><circle cx="144" cy="258" r="3.5"/><circle cx="166" cy="192" r="3.5"/><circle cx="166" cy="258" r="3.5"/><circle cx="188" cy="192" r="3.5"/><circle cx="188" cy="258" r="3.5"/><circle cx="210" cy="192" r="3.5"/><circle cx="210" cy="258" r="3.5"/><circle cx="232" cy="192" r="3.5"/><circle cx="232" cy="258" r="3.5"/><circle cx="254" cy="192" r="3.5"/><circle cx="254" cy="258" r="3.5"/><circle cx="276" cy="192" r="3.5"/><circle cx="276" cy="258" r="3.5"/><circle cx="298" cy="192" r="3.5"/><circle cx="298" cy="258" r="3.5"/><circle cx="320" cy="192" r="3.5"/><circle cx="320" cy="258" r="3.5"/><circle cx="342" cy="192" r="3.5"/><circle cx="342" cy="258" r="3.5"/><circle cx="364" cy="192" r="3.5"/><circle cx="364" cy="258" r="3.5"/><circle cx="386" cy="192" r="3.5"/><circle cx="386" cy="258" r="3.5"/><circle cx="408" cy="192" r="3.5"/><circle cx="408" cy="258" r="3.5"/><circle cx="430" cy="192" r="3.5"/><circle cx="430" cy="258" r="3.5"/><circle cx="452" cy="192" r="3.5"/><circle cx="452" cy="258" r="3.5"/><circle cx="474" cy="192" r="3.5"/><circle cx="474" cy="258" r="3.5"/><circle cx="496" cy="192" r="3.5"/><circle cx="496" cy="258" r="3.5"/><circle cx="518" cy="192" r="3.5"/><circle cx="518" cy="258" r="3.5"/><circle cx="540" cy="192" r="3.5"/><circle cx="540" cy="258" r="3.5"/><circle cx="562" cy="192" r="3.5"/><circle cx="562" cy="258" r="3.5"/><circle cx="584" cy="192" r="3.5"/><circle cx="584" cy="258" r="3.5"/></g>
+      <text x="608" y="230" font-size="12" fill="#d9a94f" opacity="0.85" font-family="IBM Plex Mono"
+            letter-spacing="0.07em">ЛІПІДНИЙ БІШАР</text>
+
+      <!-- ЦИТОПЛАЗМА -->
+      <rect x="-20" y="285" width="620" height="290" fill="#9b87c4" fill-opacity="0.035"
+            stroke="#9b87c4" stroke-width="1.2" stroke-opacity="0.25" stroke-dasharray="5 5"/>
+      <text x="-10" y="595" font-size="13" fill="#9b87c4" opacity="0.7" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.1em">ЦИТОПЛАЗМА</text>
+
+      <!-- ЗОНА ПОТЕНЦІАЛУ ДІЇ (праворуч) -->
+      <rect x="640" y="30" width="620" height="530" fill="#5fb583" fill-opacity="0.035"
+            stroke="#5fb583" stroke-width="1.2" stroke-opacity="0.3" stroke-dasharray="6 6"/>
+      <text x="650" y="20" font-size="13" fill="#5fb583" opacity="0.75" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.1em">ПОТЕНЦІАЛ ДІЇ · ПРОВЕДЕННЯ</text>
+      <!-- крива потенціалу дії як орієнтир -->
+      <path d="M680,175 L840,175 L880,60 L960,215 L1060,185 L1120,175 L1240,175"
+            fill="none" stroke="#5fb583" stroke-width="1.5" opacity="0.25"/>
+      <text x="1245" y="178" font-size="10" fill="#7d6a5e" opacity="0.6" font-family="IBM Plex Mono">час →</text>
+
+      <!-- ЗОНА ПЛАСТИЧНОСТІ (низ) -->
+      <rect x="-20" y="600" width="1180" height="270" fill="#c986ab" fill-opacity="0.04"
+            stroke="#c986ab" stroke-width="1.2" stroke-opacity="0.3" stroke-dasharray="6 6"/>
+      <text x="-10" y="890" font-size="13" fill="#c986ab" opacity="0.75" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.1em">СИНАПТИЧНА ПЛАСТИЧНІСТЬ · ПАМʼЯТЬ</text>
+      <text x="420" y="890" font-size="11" fill="#7d6a5e" opacity="0.65" font-family="IBM Plex Sans">LTP/LTD · CREB · нейрогенез</text>
+    </svg>
+  </div>
+</div>
 <div id="lod-hint"></div>
 <div id="cy"></div>
 
@@ -112,6 +162,9 @@ N('nsc','Нейральні стовбурові клітини','molecule','М�
 N('neurogenesis','Дорослий нейрогенез','plasticity','Утворення нових нейронів у зубчастій звивині гіпокампа протягом життя.','Стрес пригнічує, а СІЗЗС і фізична активність стимулюють — одна з гіпотез механізму антидепресантів.')
 ];
 
+const _pos = {"naOut": {"x": 120, "y": 80}, "ca2in": {"x": 430, "y": 80}, "naK": {"x": 90, "y": 225}, "kleak": {"x": 230, "y": 225}, "navGate": {"x": 370, "y": 225}, "kvGate": {"x": 510, "y": 225}, "kIn": {"x": 120, "y": 330}, "rmp": {"x": 700, "y": 120}, "epsp": {"x": 700, "y": 230}, "ipsp": {"x": 700, "y": 310}, "summation": {"x": 700, "y": 400}, "axonHillock": {"x": 700, "y": 490}, "threshold": {"x": 860, "y": 110}, "depol": {"x": 1010, "y": 130}, "repol": {"x": 1140, "y": 120}, "hyperpol": {"x": 1140, "y": 220}, "refract": {"x": 1000, "y": 220}, "myelin": {"x": 900, "y": 400}, "ranvier": {"x": 1050, "y": 400}, "saltatory": {"x": 980, "y": 490}, "spine": {"x": 140, "y": 650}, "camkII": {"x": 300, "y": 650}, "ampaInsert": {"x": 300, "y": 740}, "ltp": {"x": 460, "y": 700}, "ltd": {"x": 460, "y": 800}, "creb": {"x": 640, "y": 700}, "nsc": {"x": 860, "y": 790}, "neurogenesis": {"x": 1010, "y": 790}};
+nodes.forEach(n=>{ if(_pos[n.data.id]) n.position = _pos[n.data.id]; });
+
 const edges = [
 E('naK','naOut'),E('naK','kIn'),E('kleak','kIn'),E('naOut','rmp'),E('kIn','rmp'),E('kleak','rmp'),
 E('rmp','threshold'),E('threshold','navGate'),E('navGate','depol'),E('depol','kvGate'),E('kvGate','repol'),
@@ -146,7 +199,7 @@ const _srcMem2 = {"rmp": [{"authors": "Goldman, D.E.", "year": "1943", "title": 
 nodes.forEach(n=>{ if(_srcMem2[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcMem2[n.data.id]); });
 const _srcMem3 = {"kleak": [{"authors": "Hille, B.", "year": "2001", "title": "Ion Channels of Excitable Membranes, 3rd ed. (стандартний довідник)", "url": ""}], "naOut": [{"authors": "Hille, B.", "year": "2001", "title": "Ion Channels of Excitable Membranes, 3rd ed. (стандартний довідник)", "url": ""}], "kIn": [{"authors": "Hille, B.", "year": "2001", "title": "Ion Channels of Excitable Membranes, 3rd ed. (стандартний довідник)", "url": ""}], "threshold": [{"authors": "Hodgkin, A.L. & Huxley, A.F.", "year": "1952", "title": "A quantitative description of membrane current and its application to conduction and excitation in nerve", "url": "https://doi.org/10.1113/jphysiol.1952.sp004764"}], "kvGate": [{"authors": "Hodgkin, A.L. & Huxley, A.F.", "year": "1952", "title": "A quantitative description of membrane current and its application to conduction and excitation in nerve", "url": "https://doi.org/10.1113/jphysiol.1952.sp004764"}], "repol": [{"authors": "Hodgkin, A.L. & Huxley, A.F.", "year": "1952", "title": "A quantitative description of membrane current and its application to conduction and excitation in nerve", "url": "https://doi.org/10.1113/jphysiol.1952.sp004764"}], "hyperpol": [{"authors": "Hodgkin, A.L. & Huxley, A.F.", "year": "1952", "title": "A quantitative description of membrane current and its application to conduction and excitation in nerve", "url": "https://doi.org/10.1113/jphysiol.1952.sp004764"}], "refract": [{"authors": "Hodgkin, A.L. & Huxley, A.F.", "year": "1952", "title": "A quantitative description of membrane current and its application to conduction and excitation in nerve", "url": "https://doi.org/10.1113/jphysiol.1952.sp004764"}], "ranvier": [{"authors": "Rasband, M.N. & Peles, E.", "year": "2016", "title": "The nodes of Ranvier: molecular assembly and maintenance", "url": "https://doi.org/10.1101/cshperspect.a020495"}], "summation": [{"authors": "Magee, J.C.", "year": "2000", "title": "Dendritic integration of excitatory synaptic input", "url": "https://doi.org/10.1038/35044552"}], "axonHillock": [{"authors": "Bender, K.J. & Trussell, L.O.", "year": "2012", "title": "The physiology of the axon initial segment", "url": "https://doi.org/10.1146/annurev-neuro-062111-150339"}], "nsc": [{"authors": "Gage, F.H.", "year": "2000", "title": "Mammalian neural stem cells", "url": "https://doi.org/10.1126/science.287.5457.1433"}]};
 nodes.forEach(n=>{ if(_srcMem3[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcMem3[n.data.id]); });
-AtlasMap.build({nodes, edges, catColor, catLabel});
+AtlasMap.build({nodes, edges, catColor, catLabel, presetPositions:true});
 </script>
 </body>
 </html>

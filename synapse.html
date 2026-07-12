@@ -61,6 +61,66 @@
   <div class="xref" id="p-xref"></div>
 </div>
 
+<div id="cy-bg" style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;">
+  <div id="cy-bg-layer" style="position:absolute;top:0;left:0;width:1300px;height:1120px;transform-origin:0 0;">
+    <svg width="1300" height="1120" viewBox="-40 0 1300 1120" style="overflow:visible;">
+      <defs>
+        <pattern id="dots" width="34" height="34" patternUnits="userSpaceOnUse">
+          <circle cx="17" cy="17" r="1" fill="#3a2229" opacity="0.55"/>
+        </pattern>
+        <linearGradient id="preGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5fb583" stop-opacity="0.07"/>
+          <stop offset="100%" stop-color="#5fb583" stop-opacity="0.02"/>
+        </linearGradient>
+        <linearGradient id="postGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4a9db0" stop-opacity="0.02"/>
+          <stop offset="100%" stop-color="#4a9db0" stop-opacity="0.07"/>
+        </linearGradient>
+      </defs>
+      <rect x="-200" y="-100" width="1700" height="1400" fill="url(#dots)"/>
+
+      <!-- ПРЕСИНАПТИЧНИЙ ТЕРМІНАЛ (синтез і викид) -->
+      <path d="M-20,20 L1230,20 L1230,560 Q1230,600 1190,600 L20,600 Q-20,600 -20,560 Z"
+            fill="url(#preGrad)" stroke="#5fb583" stroke-width="1.5" stroke-opacity="0.35"/>
+      <text x="-10" y="-8" font-size="15" fill="#5fb583" opacity="0.75" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.11em">ПРЕСИНАПТИЧНИЙ ТЕРМІНАЛ</text>
+      <text x="-10" y="12" font-size="11" fill="#7d6a5e" opacity="0.7" font-family="IBM Plex Sans">синтез · везикули · викид</text>
+
+      <!-- СИНАПТИЧНА ЩІЛИНА -->
+      <rect x="-20" y="600" width="1250" height="0" fill="none"/>
+      <line x1="-20" y1="600" x2="1230" y2="600" stroke="#c98a3f" stroke-width="2" stroke-dasharray="10 6" opacity="0.5"/>
+      <text x="1240" y="596" font-size="12" fill="#c98a3f" opacity="0.8" font-family="IBM Plex Mono"
+            letter-spacing="0.08em">ЩІЛИНА</text>
+
+      <!-- ПОСТСИНАПТИЧНА МЕМБРАНА (рецептори) -->
+      <path d="M-20,620 L1230,620 L1230,760 L-20,760 Z"
+            fill="url(#postGrad)" stroke="#4a9db0" stroke-width="1.5" stroke-opacity="0.35"/>
+      <text x="-10" y="782" font-size="15" fill="#4a9db0" opacity="0.75" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.11em">ПОСТСИНАПТИЧНА МЕМБРАНА</text>
+      <text x="-10" y="800" font-size="11" fill="#7d6a5e" opacity="0.7" font-family="IBM Plex Sans">рецептори</text>
+
+      <!-- ВНУТРІШНЬОКЛІТИННИЙ ПРОСТІР -->
+      <rect x="-20" y="790" width="1250" height="300" fill="#9b87c4" fill-opacity="0.035"
+            stroke="#9b87c4" stroke-width="1.5" stroke-opacity="0.3" stroke-dasharray="5 5"/>
+      <text x="-10" y="1112" font-size="15" fill="#9b87c4" opacity="0.75" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.11em">ЦИТОПЛАЗМА ПОСТСИНАПТИЧНОЇ КЛІТИНИ</text>
+      <text x="480" y="1112" font-size="11" fill="#7d6a5e" opacity="0.7" font-family="IBM Plex Sans">другі посередники · каскади</text>
+
+      <!-- Вертикальні розділювачі медіаторних систем -->
+      <g stroke="#4a2e37" stroke-width="1" stroke-dasharray="4 8" opacity="0.5">
+        <line x1="368" y1="30" x2="368" y2="760"/>
+        <line x1="630" y1="30" x2="630" y2="760"/>
+        <line x1="962" y1="30" x2="962" y2="760"/>
+      </g>
+      <g font-family="IBM Plex Mono" font-size="11" letter-spacing="0.09em" opacity="0.6">
+        <text x="175" y="45" fill="#c97a63">КАТЕХОЛАМІНИ</text>
+        <text x="440" y="45" fill="#c986ab">СЕРОТОНІН</text>
+        <text x="700" y="45" fill="#5fb583">ГЛУТАМАТ / ГАМК</text>
+        <text x="1010" y="45" fill="#d9a94f">АЦЕТИЛХОЛІН</text>
+      </g>
+    </svg>
+  </div>
+</div>
 <div id="lod-hint"></div>
 <div id="cy"></div>
 
@@ -145,6 +205,9 @@ N('exo','Екзоцитоз','vesicle','Викид медіатора в син�
 N('reuptake','Зворотне захоплення','transporter','Транспортери повертають медіатор у термінал.','DAT, SERT, GAT, ChT — мішені більшості психофармпрепаратів; СІЗЗС блокують SERT.')
 ];
 
+const _pos = {"phe": {"x": 120, "y": 90}, "tyr": {"x": 120, "y": 160}, "ldopa": {"x": 120, "y": 230}, "da": {"x": 150, "y": 320}, "ne": {"x": 90, "y": 395}, "epi": {"x": 75, "y": 470}, "dopac": {"x": 250, "y": 410}, "threemt": {"x": 300, "y": 340}, "hva": {"x": 330, "y": 555}, "normet": {"x": 190, "y": 470}, "vma": {"x": 140, "y": 560}, "d1": {"x": 70, "y": 640}, "d2": {"x": 140, "y": 700}, "alpha1": {"x": 230, "y": 640}, "beta": {"x": 300, "y": 700}, "trp": {"x": 470, "y": 90}, "fivehtp": {"x": 455, "y": 175}, "ser": {"x": 470, "y": 320}, "nas": {"x": 575, "y": 230}, "mel": {"x": 620, "y": 300}, "fivehial": {"x": 400, "y": 410}, "fivehiaa": {"x": 430, "y": 495}, "ht1a": {"x": 400, "y": 640}, "ht2a": {"x": 470, "y": 700}, "ht3": {"x": 545, "y": 640}, "gln": {"x": 770, "y": 90}, "glu": {"x": 720, "y": 240}, "gaba": {"x": 830, "y": 320}, "ssa": {"x": 890, "y": 385}, "succ": {"x": 890, "y": 460}, "nmda": {"x": 650, "y": 640}, "ampa": {"x": 700, "y": 720}, "mglur": {"x": 800, "y": 640}, "gabaa": {"x": 880, "y": 720}, "gabab": {"x": 955, "y": 640}, "cho": {"x": 1000, "y": 90}, "accoa": {"x": 1120, "y": 90}, "ach": {"x": 1060, "y": 240}, "acetate": {"x": 1150, "y": 400}, "cho2": {"x": 1030, "y": 395}, "nach": {"x": 1040, "y": 640}, "mach": {"x": 1140, "y": 720}, "vtransport": {"x": 1250, "y": 200}, "dock": {"x": 1250, "y": 280}, "exo": {"x": 1250, "y": 360}, "ca2": {"x": 1250, "y": 120}, "reuptake": {"x": 1250, "y": 480}, "gs": {"x": 150, "y": 820}, "gi": {"x": 290, "y": 820}, "gq": {"x": 560, "y": 820}, "ac": {"x": 220, "y": 890}, "plc": {"x": 560, "y": 890}, "camp": {"x": 220, "y": 960}, "ip3dag": {"x": 560, "y": 960}, "pka": {"x": 220, "y": 1030}, "pkc": {"x": 560, "y": 1030}, "ionflux": {"x": 830, "y": 880}};
+nodes.forEach(n=>{ if(_pos[n.data.id]) n.position = _pos[n.data.id]; });
+
 const edges = [
 E('phe','tyr','ФАГ'),E('tyr','ldopa','TH'),E('ldopa','da','AADC'),E('da','ne','DBH'),E('ne','epi','PNMT'),
 E('da','dopac','MAO'),E('dopac','hva','COMT'),E('da','threemt','COMT'),E('threemt','hva','MAO'),
@@ -182,7 +245,7 @@ const _srcReal = {"d1": [{"authors": "Beaulieu, J.M. & Gainetdinov, R.R.", "year
 nodes.forEach(n=>{ if(_srcReal[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcReal[n.data.id]); });
 const _srcPath = {"phe": [{"authors": "Eisenhofer, G., Kopin, I.J. & Goldstein, D.S.", "year": "2004", "title": "Catecholamine metabolism: a contemporary view (оглядова стаття по всьому шляху)", "url": "https://doi.org/10.1124/pr.56.3.1"}], "tyr": [{"authors": "Eisenhofer, G., Kopin, I.J. & Goldstein, D.S.", "year": "2004", "title": "Catecholamine metabolism: a contemporary view (оглядова стаття по всьому шляху)", "url": "https://doi.org/10.1124/pr.56.3.1"}], "ldopa": [{"authors": "Eisenhofer, G., Kopin, I.J. & Goldstein, D.S.", "year": "2004", "title": "Catecholamine metabolism: a contemporary view (оглядова стаття по всьому шляху)", "url": "https://doi.org/10.1124/pr.56.3.1"}], "dopac": [{"authors": "Eisenhofer, G., Kopin, I.J. & Goldstein, D.S.", "year": "2004", "title": "Catecholamine metabolism: a contemporary view (оглядова стаття по всьому шляху)", "url": "https://doi.org/10.1124/pr.56.3.1"}], "threemt": [{"authors": "Eisenhofer, G., Kopin, I.J. & Goldstein, D.S.", "year": "2004", "title": "Catecholamine metabolism: a contemporary view (оглядова стаття по всьому шляху)", "url": "https://doi.org/10.1124/pr.56.3.1"}], "hva": [{"authors": "Eisenhofer, G., Kopin, I.J. & Goldstein, D.S.", "year": "2004", "title": "Catecholamine metabolism: a contemporary view (оглядова стаття по всьому шляху)", "url": "https://doi.org/10.1124/pr.56.3.1"}], "normet": [{"authors": "Eisenhofer, G., Kopin, I.J. & Goldstein, D.S.", "year": "2004", "title": "Catecholamine metabolism: a contemporary view (оглядова стаття по всьому шляху)", "url": "https://doi.org/10.1124/pr.56.3.1"}], "vma": [{"authors": "Eisenhofer, G., Kopin, I.J. & Goldstein, D.S.", "year": "2004", "title": "Catecholamine metabolism: a contemporary view (оглядова стаття по всьому шляху)", "url": "https://doi.org/10.1124/pr.56.3.1"}], "trp": [{"authors": "Walther, D.J. & Bader, M.", "year": "2003", "title": "A unique central tryptophan hydroxylase isoform (біосинтез серотоніну)", "url": "https://doi.org/10.1016/S0006-2952(03)00556-2"}], "fivehtp": [{"authors": "Walther, D.J. & Bader, M.", "year": "2003", "title": "A unique central tryptophan hydroxylase isoform (біосинтез серотоніну)", "url": "https://doi.org/10.1016/S0006-2952(03)00556-2"}], "nas": [{"authors": "Walther, D.J. & Bader, M.", "year": "2003", "title": "A unique central tryptophan hydroxylase isoform (біосинтез серотоніну)", "url": "https://doi.org/10.1016/S0006-2952(03)00556-2"}], "fivehial": [{"authors": "Walther, D.J. & Bader, M.", "year": "2003", "title": "A unique central tryptophan hydroxylase isoform (біосинтез серотоніну)", "url": "https://doi.org/10.1016/S0006-2952(03)00556-2"}], "fivehiaa": [{"authors": "Walther, D.J. & Bader, M.", "year": "2003", "title": "A unique central tryptophan hydroxylase isoform (біосинтез серотоніну)", "url": "https://doi.org/10.1016/S0006-2952(03)00556-2"}], "gln": [{"authors": "Bak, L.K., Schousboe, A. & Waagepetersen, H.S.", "year": "2006", "title": "The glutamate/GABA-glutamine cycle (оглядова стаття по циклу)", "url": "https://doi.org/10.1111/j.1471-4159.2006.03913.x"}], "ssa": [{"authors": "Bak, L.K., Schousboe, A. & Waagepetersen, H.S.", "year": "2006", "title": "The glutamate/GABA-glutamine cycle (оглядова стаття по циклу)", "url": "https://doi.org/10.1111/j.1471-4159.2006.03913.x"}], "succ": [{"authors": "Bak, L.K., Schousboe, A. & Waagepetersen, H.S.", "year": "2006", "title": "The glutamate/GABA-glutamine cycle (оглядова стаття по циклу)", "url": "https://doi.org/10.1111/j.1471-4159.2006.03913.x"}], "cho": [{"authors": "Picciotto, M.R., Higley, M.J. & Mineur, Y.S.", "year": "2012", "title": "Acetylcholine as a neuromodulator (огляд синтезу й обміну)", "url": "https://doi.org/10.1016/j.neuron.2012.08.036"}], "cho2": [{"authors": "Picciotto, M.R., Higley, M.J. & Mineur, Y.S.", "year": "2012", "title": "Acetylcholine as a neuromodulator (огляд синтезу й обміну)", "url": "https://doi.org/10.1016/j.neuron.2012.08.036"}], "accoa": [{"authors": "Picciotto, M.R., Higley, M.J. & Mineur, Y.S.", "year": "2012", "title": "Acetylcholine as a neuromodulator (огляд синтезу й обміну)", "url": "https://doi.org/10.1016/j.neuron.2012.08.036"}], "acetate": [{"authors": "Picciotto, M.R., Higley, M.J. & Mineur, Y.S.", "year": "2012", "title": "Acetylcholine as a neuromodulator (огляд синтезу й обміну)", "url": "https://doi.org/10.1016/j.neuron.2012.08.036"}]};
 nodes.forEach(n=>{ if(_srcPath[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcPath[n.data.id]); });
-AtlasMap.build({nodes, edges, catColor, catLabel});
+AtlasMap.build({nodes, edges, catColor, catLabel, presetPositions:true});
 </script>
 </body>
 </html>

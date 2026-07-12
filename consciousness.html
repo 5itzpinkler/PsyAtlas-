@@ -69,6 +69,42 @@
   <div class="xref" id="p-xref"></div>
 </div>
 
+<div id="cy-bg" style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;">
+  <div id="cy-bg-layer" style="position:absolute;top:0;left:0;width:1030px;height:760px;transform-origin:0 0;">
+    <svg width="1030" height="760" viewBox="-20 0 1030 780" style="overflow:visible;">
+      <defs><pattern id="dots" width="34" height="34" patternUnits="userSpaceOnUse">
+        <circle cx="17" cy="17" r="1" fill="#3a2229" opacity="0.55"/></pattern></defs>
+      <rect x="-300" y="-200" width="1900" height="1500" fill="url(#dots)"/>
+
+      <!-- ВЕРТИКАЛЬ АРУЗАЛУ (ліворуч) -->
+      <rect x="60" y="80" width="245" height="620" fill="#6b9fd6" fill-opacity="0.045"
+            stroke="#6b9fd6" stroke-width="1.3" stroke-opacity="0.35" stroke-dasharray="6 6" rx="3"/>
+      <line x1="182" y1="120" x2="182" y2="660" stroke="#6b9fd6" stroke-width="2" opacity="0.22"/>
+      <text x="182" y="60" text-anchor="middle" font-size="13" fill="#6b9fd6" opacity="0.8"
+            font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.09em">ВІСЬ АРУЗАЛУ</text>
+      <text x="30" y="105" font-size="10" fill="#7d6a5e" opacity="0.7" font-family="IBM Plex Mono">кора</text>
+      <text x="30" y="345" font-size="10" fill="#7d6a5e" opacity="0.7" font-family="IBM Plex Mono">таламус</text>
+      <text x="30" y="645" font-size="10" fill="#7d6a5e" opacity="0.7" font-family="IBM Plex Mono">стовбур</text>
+
+      <!-- СТАНИ СВІДОМОСТІ (низ) -->
+      <rect x="350" y="590" width="620" height="105" fill="#5fb583" fill-opacity="0.05"
+            stroke="#5fb583" stroke-width="1.3" stroke-opacity="0.35" stroke-dasharray="6 6" rx="3"/>
+      <text x="360" y="715" font-size="13" fill="#5fb583" opacity="0.8"
+            font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.09em">СТАНИ СВІДОМОСТІ</text>
+      <text x="620" y="715" font-size="10.5" fill="#7d6a5e" opacity="0.7"
+            font-family="IBM Plex Sans">континуум від коми до бадьорості</text>
+
+      <!-- ЗОНА ТЕОРІЙ (праворуч, окремо — це не анатомія) -->
+      <rect x="600" y="60" width="370" height="270" fill="#c98a3f" fill-opacity="0.05"
+            stroke="#c98a3f" stroke-width="1.3" stroke-opacity="0.4" rx="3"/>
+      <text x="785" y="45" text-anchor="middle" font-size="13" fill="#c98a3f" opacity="0.85"
+            font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.09em">КОНКУРУЮЧІ ТЕОРІЇ</text>
+      <text x="785" y="352" text-anchor="middle" font-size="10.5" fill="#7d6a5e" opacity="0.7"
+            font-family="IBM Plex Sans">не анатомія — концептуальний рівень</text>
+
+    </svg>
+  </div>
+</div>
 <div id="lod-hint"></div>
 <div id="cy"></div>
 
@@ -142,6 +178,9 @@ N('ncc','Нейронні корелати свідомості (NCC)','process'
   clin:'Прагматичний фундамент усієї сучасної нейронауки свідомості: дозволяє робити перевірювані експерименти, не чекаючи розвʼязання важкої проблеми. Adversarial-колаборації (GNWT проти IIT) намагаються розсудити теорії саме через передбачення NCC.'})
 ];
 
+const _pos = {"arasStub": {"x": 180, "y": 640}, "arousal": {"x": 180, "y": 500}, "thalamocortical": {"x": 180, "y": 340}, "dmn": {"x": 180, "y": 170}, "globalWorkspace": {"x": 400, "y": 240}, "coma": {"x": 430, "y": 640}, "vegetative": {"x": 590, "y": 640}, "mcs": {"x": 740, "y": 640}, "anesthesia": {"x": 880, "y": 640}, "gnwt": {"x": 680, "y": 120}, "iit": {"x": 870, "y": 120}, "hot": {"x": 680, "y": 250}, "rpt": {"x": 870, "y": 250}, "ncc": {"x": 775, "y": 400}, "hardProblem": {"x": 775, "y": 510}};
+nodes.forEach(n=>{ if(_pos[n.data.id]) n.position = _pos[n.data.id]; });
+
 const edges = [
 E('arasStub','arousal','арузал'),
 E('arousal','thalamocortical'),E('thalamocortical','globalWorkspace'),
@@ -170,7 +209,7 @@ const _srcCons2 = {"thalamocortical": [{"authors": "Llinás, R. et al.", "year":
 nodes.forEach(n=>{ if(_srcCons2[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcCons2[n.data.id]); });
 const _srcCons3 = {"arousal": [{"authors": "Laureys, S.", "year": "2005", "title": "The neural correlate of (un)awareness: lessons from the vegetative state", "url": "https://doi.org/10.1016/j.tics.2005.10.010"}], "coma": [{"authors": "Posner, J.B. et al.", "year": "2007", "title": "Plum and Posner’s Diagnosis of Stupor and Coma, 4th ed.", "url": ""}], "mcs": [{"authors": "Giacino, J.T. et al.", "year": "2002", "title": "The minimally conscious state: definition and diagnostic criteria", "url": "https://doi.org/10.1212/WNL.58.3.349"}]};
 nodes.forEach(n=>{ if(_srcCons3[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcCons3[n.data.id]); });
-AtlasMap.build({nodes, edges, catColor, catLabel, layout:{rankSep:150, nodeSep:62}});
+AtlasMap.build({nodes, edges, catColor, catLabel, presetPositions:true});
 </script>
 </body>
 </html>

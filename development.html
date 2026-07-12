@@ -66,6 +66,62 @@
   <div class="xref" id="p-xref"></div>
 </div>
 
+<div id="cy-bg" style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;">
+  <div id="cy-bg-layer" style="position:absolute;top:0;left:0;width:1180px;height:680px;transform-origin:0 0;">
+    <svg width="1180" height="680" viewBox="0 60 1180 620" style="overflow:visible;">
+      <defs><pattern id="dots" width="34" height="34" patternUnits="userSpaceOnUse">
+        <circle cx="17" cy="17" r="1" fill="#3a2229" opacity="0.55"/></pattern></defs>
+      <rect x="-300" y="-200" width="1900" height="1500" fill="url(#dots)"/>
+
+      <!-- ЧАСОВА ВІСЬ -->
+      <line x1="40" y1="600" x2="1090" y2="600" stroke="#c98a3f" stroke-width="2" opacity="0.5"/>
+      <polygon points="1090,600 1078,595 1078,605" fill="#c98a3f" opacity="0.6"/>
+      <text x="1100" y="604" font-size="11" fill="#c98a3f" opacity="0.8" font-family="IBM Plex Mono">час життя</text>
+      <g stroke="#c98a3f" stroke-width="1.5" opacity="0.4">
+        <line x1="110" y1="594" x2="110" y2="606"/><line x1="330" y1="594" x2="330" y2="606"/>
+        <line x1="560" y1="594" x2="560" y2="606"/><line x1="760" y1="594" x2="760" y2="606"/>
+        <line x1="970" y1="594" x2="970" y2="606"/>
+      </g>
+      <g font-family="IBM Plex Mono" font-size="10.5" fill="#7d6a5e" opacity="0.85" text-anchor="middle">
+        <text x="110" y="625">пренатально</text>
+        <text x="330" y="625">0–5 років</text>
+        <text x="560" y="625">дитинство · пубертат</text>
+        <text x="760" y="625">дорослість</text>
+        <text x="970" y="625">старість</text>
+      </g>
+
+      <!-- Крива пластичності -->
+      <path d="M70,470 Q140,120 260,110 Q400,105 520,220 Q680,360 850,440 Q980,480 1080,495"
+            fill="none" stroke="#5fb583" stroke-width="2" opacity="0.3"/>
+      <text x="60" y="90" font-size="11" fill="#5fb583" opacity="0.7" font-family="IBM Plex Mono">пік пластичності</text>
+
+      <!-- Зони -->
+      <rect x="45" y="130" width="140" height="330" fill="#c986ab" fill-opacity="0.05"
+            stroke="#c986ab" stroke-width="1.2" stroke-opacity="0.35" stroke-dasharray="5 5" rx="3"/>
+      <text x="115" y="120" text-anchor="middle" font-size="11.5" fill="#c986ab" opacity="0.8"
+            font-family="IBM Plex Sans" font-weight="600">ФОРМУВАННЯ</text>
+
+      <rect x="220" y="130" width="230" height="450" fill="#d9a94f" fill-opacity="0.06"
+            stroke="#d9a94f" stroke-width="1.2" stroke-opacity="0.4" stroke-dasharray="5 5" rx="3"/>
+      <text x="335" y="120" text-anchor="middle" font-size="11.5" fill="#d9a94f" opacity="0.85"
+            font-family="IBM Plex Sans" font-weight="600">КРИТИЧНІ ВІКНА</text>
+
+      <rect x="480" y="140" width="180" height="350" fill="#5fb583" fill-opacity="0.05"
+            stroke="#5fb583" stroke-width="1.2" stroke-opacity="0.35" stroke-dasharray="5 5" rx="3"/>
+      <text x="570" y="130" text-anchor="middle" font-size="11.5" fill="#5fb583" opacity="0.8"
+            font-family="IBM Plex Sans" font-weight="600">ПЕРЕБУДОВА</text>
+
+      <rect x="690" y="190" width="150" height="270" fill="#5fb583" fill-opacity="0.04"
+            stroke="#5fb583" stroke-width="1.2" stroke-opacity="0.28" stroke-dasharray="5 5" rx="3"/>
+
+      <rect x="890" y="190" width="170" height="280" fill="#6b9fd6" fill-opacity="0.05"
+            stroke="#6b9fd6" stroke-width="1.2" stroke-opacity="0.35" stroke-dasharray="5 5" rx="3"/>
+      <text x="975" y="180" text-anchor="middle" font-size="11.5" fill="#6b9fd6" opacity="0.8"
+            font-family="IBM Plex Sans" font-weight="600">СТАРІННЯ · РЕЗЕРВ</text>
+
+    </svg>
+  </div>
+</div>
 <div id="lod-hint"></div>
 <div id="cy"></div>
 
@@ -139,6 +195,9 @@ N('sensitiveVsCritical','Критичне vs сенситивне вікно','p
   clin:'Педагогічно й терапевтично важливо не переоцінювати жорсткість вікон: концепція сенситивних періодів залишає простір для втручання й змін у дорослому віці.'})
 ];
 
+const _pos = {"neurulation": {"x": 110, "y": 180}, "proliferation": {"x": 110, "y": 290}, "differentiation": {"x": 110, "y": 400}, "criticalPeriod": {"x": 330, "y": 180}, "languageCP": {"x": 310, "y": 300}, "attachmentCP": {"x": 310, "y": 415}, "sensitiveVsCritical": {"x": 310, "y": 530}, "experienceExpectant": {"x": 540, "y": 520}, "synapticPruning": {"x": 560, "y": 280}, "myelination": {"x": 560, "y": 400}, "experienceDependent": {"x": 760, "y": 250}, "adultNeurogenesis": {"x": 760, "y": 390}, "agingBrain": {"x": 970, "y": 250}, "cognitiveReserve": {"x": 970, "y": 400}};
+nodes.forEach(n=>{ if(_pos[n.data.id]) n.position = _pos[n.data.id]; });
+
 const edges = [
 E('neurulation','proliferation'),E('proliferation','differentiation'),
 E('differentiation','criticalPeriod','надлишок синапсів'),
@@ -167,7 +226,7 @@ const _srcDev2 = {"proliferation": [{"authors": "Rakic, P.", "year": "1988", "ti
 nodes.forEach(n=>{ if(_srcDev2[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcDev2[n.data.id]); });
 const _srcDev3 = {"neurulation": [{"authors": "Copp, A.J. & Greene, N.D.", "year": "2010", "title": "Genetics and development of neural tube defects", "url": "https://doi.org/10.1002/path.2643"}], "experienceExpectant": [{"authors": "Greenough, W.T., Black, J.E. & Wallace, C.S.", "year": "1987", "title": "Experience and brain development", "url": "https://doi.org/10.2307/1130197"}], "adultNeurogenesis": [{"authors": "Kempermann, G. et al.", "year": "2018", "title": "Human adult neurogenesis: evidence and remaining questions", "url": "https://doi.org/10.1016/j.stem.2018.04.004"}], "sensitiveVsCritical": [{"authors": "Knudsen, E.I.", "year": "2004", "title": "Sensitive periods in the development of the brain and behavior", "url": "https://doi.org/10.1162/0898929042304796"}]};
 nodes.forEach(n=>{ if(_srcDev3[n.data.id]) n.data.sources=(n.data.sources||[]).concat(_srcDev3[n.data.id]); });
-AtlasMap.build({nodes, edges, catColor, catLabel, layout:{rankSep:135, nodeSep:58}});
+AtlasMap.build({nodes, edges, catColor, catLabel, presetPositions:true});
 </script>
 </body>
 </html>

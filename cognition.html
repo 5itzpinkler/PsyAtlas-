@@ -69,53 +69,88 @@
 </div>
 
 <div id="cy-bg" style="position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none;">
-  <div id="cy-bg-layer" style="position:absolute;top:0;left:0;width:1080px;height:740px;transform-origin:0 0;">
-    <svg width="1080" height="740" viewBox="-20 -20 1080 760" style="overflow:visible;">
+  <div id="cy-bg-layer" style="position:absolute;top:0;left:0;width:1050px;height:850px;transform-origin:0 0;">
+    <svg width="1050" height="850" viewBox="-30 0 1050 850" style="overflow:visible;">
       <defs><pattern id="dots" width="34" height="34" patternUnits="userSpaceOnUse">
         <circle cx="17" cy="17" r="1" fill="#3a2229" opacity="0.55"/></pattern></defs>
-      <rect x="-300" y="-200" width="1900" height="1500" fill="url(#dots)"/>
+      <rect x="-300" y="-200" width="1700" height="1400" fill="url(#dots)"/>
 
-      <!-- Контур мозку (латеральний вигляд) -->
-      <path d="M60,340 Q40,180 180,90 Q360,10 620,30 Q860,50 960,190
-               Q1030,300 970,420 Q990,500 900,560 Q800,630 660,600
-               Q480,650 330,600 Q140,580 90,450 Q50,410 60,340 Z"
-            fill="none" stroke="#4a2e37" stroke-width="2.5" opacity="0.75"/>
-      <!-- Мозочок -->
-      <ellipse cx="920" cy="580" rx="90" ry="55" fill="none" stroke="#4a2e37"
-               stroke-width="1.8" opacity="0.5"/>
+      <!-- КОНТУР ПІВКУЛІ (латеральний вигляд, лобовий полюс ЛІВОРУЧ) -->
+      <path d="M45,330 Q30,190 130,110 Q250,45 430,55 Q640,60 790,130
+               Q920,190 945,310 Q960,410 900,470
+               Q870,530 780,545 Q700,560 640,545
+               Q560,580 460,570 Q340,565 250,530
+               Q120,490 70,420 Q40,385 45,330 Z"
+            fill="none" stroke="#4a2e37" stroke-width="2.5" opacity="0.8"/>
 
-      <!-- ЛОБОВА ЧАСТКА -->
-      <ellipse cx="180" cy="270" rx="150" ry="180" fill="#5fb583" fill-opacity="0.06"
-               stroke="#5fb583" stroke-width="1.3" stroke-opacity="0.4" stroke-dasharray="6 6"/>
-      <text x="180" y="60" text-anchor="middle" font-size="13" fill="#5fb583" opacity="0.8"
-            font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.09em">ЛОБОВА</text>
-      <text x="180" y="78" text-anchor="middle" font-size="10.5" fill="#7d6a5e" opacity="0.7"
-            font-family="IBM Plex Sans">виконавчі функції</text>
+      <!-- СІЛЬВІЄВА БОРОЗНА — межа скроневої частки -->
+      <path d="M120,400 Q280,415 450,425 Q600,435 730,420"
+            fill="none" stroke="#4a2e37" stroke-width="2" opacity="0.5" stroke-dasharray="7 5"/>
+      <text x="330" y="398" font-size="9.5" fill="#7d6a5e" opacity="0.6"
+            font-family="IBM Plex Mono" letter-spacing="0.05em">сільвієва борозна</text>
 
-      <!-- ТІМʼЯНА -->
-      <ellipse cx="600" cy="170" rx="200" ry="120" fill="#6b9fd6" fill-opacity="0.06"
-               stroke="#6b9fd6" stroke-width="1.3" stroke-opacity="0.4" stroke-dasharray="6 6"/>
-      <text x="600" y="20" text-anchor="middle" font-size="13" fill="#6b9fd6" opacity="0.8"
+      <!-- ЦЕНТРАЛЬНА БОРОЗНА — межа лобової/тімʼяної -->
+      <path d="M330,80 Q345,180 360,290 Q368,350 380,400"
+            fill="none" stroke="#4a2e37" stroke-width="1.8" opacity="0.4" stroke-dasharray="6 5"/>
+
+      <!-- МОЗОЧОК (ззаду-знизу) -->
+      <ellipse cx="855" cy="580" rx="95" ry="62" fill="none" stroke="#4a2e37"
+               stroke-width="1.8" opacity="0.45"/>
+      <text x="855" y="662" text-anchor="middle" font-size="9.5" fill="#7d6a5e" opacity="0.55"
+            font-family="IBM Plex Mono">мозочок</text>
+      <!-- СТОВБУР -->
+      <path d="M760,520 Q800,590 830,660 Q845,700 835,730"
+            fill="none" stroke="#4a2e37" stroke-width="17" stroke-linecap="round" opacity="0.3"/>
+
+      <!-- ═══ ЧАСТКИ ═══ -->
+      <!-- ЛОБОВА (спереду) -->
+      <path d="M55,320 Q45,190 135,120 Q220,70 330,80 Q350,200 375,395
+               Q250,415 140,400 Q70,380 55,320 Z"
+            fill="#5fb583" fill-opacity="0.07" stroke="#5fb583" stroke-width="1.3"
+            stroke-opacity="0.45" stroke-dasharray="6 5"/>
+      <text x="150" y="55" font-size="13" fill="#5fb583" opacity="0.85" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.09em">ЛОБОВА</text>
+      <text x="150" y="73" font-size="10" fill="#7d6a5e" opacity="0.7" font-family="IBM Plex Sans">виконавчі · Брока</text>
+
+      <!-- ТІМʼЯНА (зверху-ззаду від центральної борозни) -->
+      <path d="M340,80 Q480,50 640,62 Q740,72 800,130 Q760,270 720,400
+               Q560,430 385,400 Q355,200 340,80 Z"
+            fill="#6b9fd6" fill-opacity="0.07" stroke="#6b9fd6" stroke-width="1.3"
+            stroke-opacity="0.45" stroke-dasharray="6 5"/>
+      <text x="520" y="35" text-anchor="middle" font-size="13" fill="#6b9fd6" opacity="0.85"
             font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.09em">ТІМʼЯНА</text>
-      <text x="600" y="38" text-anchor="middle" font-size="10.5" fill="#7d6a5e" opacity="0.7"
-            font-family="IBM Plex Sans">увага, орієнтування</text>
+      <text x="520" y="52" text-anchor="middle" font-size="10" fill="#7d6a5e" opacity="0.7"
+            font-family="IBM Plex Sans">увага · орієнтування</text>
 
-      <!-- СКРОНЕВА -->
-      <ellipse cx="810" cy="430" rx="180" ry="140" fill="#d9a94f" fill-opacity="0.06"
-               stroke="#d9a94f" stroke-width="1.3" stroke-opacity="0.4" stroke-dasharray="6 6"/>
-      <text x="960" y="670" text-anchor="middle" font-size="13" fill="#d9a94f" opacity="0.8"
+      <!-- ПОТИЛИЧНА (ззаду) -->
+      <path d="M810,135 Q915,190 940,310 Q952,400 895,465
+               Q820,440 745,415 Q775,270 810,135 Z"
+            fill="#c97a63" fill-opacity="0.07" stroke="#c97a63" stroke-width="1.3"
+            stroke-opacity="0.45" stroke-dasharray="6 5"/>
+      <text x="960" y="180" font-size="13" fill="#c97a63" opacity="0.85" font-family="IBM Plex Sans"
+            font-weight="600" letter-spacing="0.09em">ПОТИЛИЧНА</text>
+      <text x="960" y="197" font-size="10" fill="#7d6a5e" opacity="0.7" font-family="IBM Plex Sans">сенсорний вхід</text>
+
+      <!-- СКРОНЕВА (під сільвієвою, спереду-знизу) -->
+      <path d="M135,410 Q300,430 460,438 Q610,445 735,428
+               Q760,510 700,548 Q580,578 450,570 Q310,558 215,520
+               Q145,480 135,410 Z"
+            fill="#d9a94f" fill-opacity="0.07" stroke="#d9a94f" stroke-width="1.3"
+            stroke-opacity="0.45" stroke-dasharray="6 5"/>
+      <text x="420" y="700" text-anchor="middle" font-size="13" fill="#d9a94f" opacity="0.85"
             font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.09em">СКРОНЕВА</text>
-      <text x="960" y="688" text-anchor="middle" font-size="10.5" fill="#7d6a5e" opacity="0.7"
-            font-family="IBM Plex Sans">памʼять</text>
+      <text x="420" y="717" text-anchor="middle" font-size="10" fill="#7d6a5e" opacity="0.7"
+            font-family="IBM Plex Sans">памʼять · Верніке · гіпокамп (медіально)</text>
 
-      <!-- МОВНА МЕРЕЖА -->
-      <ellipse cx="415" cy="470" rx="230" ry="75" fill="#c986ab" fill-opacity="0.06"
-               stroke="#c986ab" stroke-width="1.3" stroke-opacity="0.4" stroke-dasharray="6 6"/>
-      <text x="190" y="680" font-size="13" fill="#c986ab" opacity="0.8"
-            font-family="IBM Plex Sans" font-weight="600" letter-spacing="0.09em">МОВНА МЕРЕЖА</text>
-      <text x="190" y="698" font-size="10.5" fill="#7d6a5e" opacity="0.7"
-            font-family="IBM Plex Sans">Брока → дугоподібний пучок → Верніке</text>
+      <!-- Мовна мережа — тракт Брока → дугоподібний пучок → Верніке -->
+      <path d="M195,455 Q330,390 450,395 Q590,410 700,455"
+            fill="none" stroke="#c986ab" stroke-width="2.5" opacity="0.35" stroke-dasharray="3 4"/>
+      <text x="880" y="790" text-anchor="end" font-size="11" fill="#c986ab" opacity="0.7"
+            font-family="IBM Plex Sans" font-weight="600">мовна мережа: Брока → дугоподібний пучок → Верніке</text>
 
+      <!-- орієнтація -->
+      <text x="20" y="800" font-size="10" fill="#7d6a5e" opacity="0.55" font-family="IBM Plex Mono">← спереду</text>
+      <text x="945" y="800" text-anchor="end" font-size="10" fill="#7d6a5e" opacity="0.55" font-family="IBM Plex Mono">ззаду →</text>
     </svg>
   </div>
 </div>
@@ -199,7 +234,7 @@ N('language-synthesis','Мова як друга сигнальна систем
   xref:[{domain:'index',label:'До атласу психологічних теорій'}]})
 ];
 
-const _pos = {"arasStub": {"x": 500, "y": 680}, "hippoStub": {"x": 730, "y": 560}, "inhibition": {"x": 130, "y": 140}, "shifting": {"x": 130, "y": 250}, "updating": {"x": 130, "y": 360}, "broca": {"x": 225, "y": 470}, "alerting": {"x": 560, "y": 110}, "orienting": {"x": 690, "y": 190}, "declarative": {"x": 800, "y": 410}, "procedural": {"x": 920, "y": 520}, "consolidation": {"x": 880, "y": 300}, "wernicke": {"x": 605, "y": 470}, "arcuate": {"x": 415, "y": 470}, "executive-att": {"x": 490, "y": 290}, "sensory-mem": {"x": 870, "y": 180}, "working-mem": {"x": 300, "y": 190}, "language-synthesis": {"x": 415, "y": 590}};
+const _pos = {"inhibition": {"x": 115, "y": 175}, "shifting": {"x": 115, "y": 275}, "updating": {"x": 115, "y": 375}, "working-mem": {"x": 255, "y": 255}, "broca": {"x": 195, "y": 470}, "alerting": {"x": 470, "y": 120}, "orienting": {"x": 600, "y": 175}, "executive-att": {"x": 415, "y": 265}, "sensory-mem": {"x": 880, "y": 225}, "declarative": {"x": 560, "y": 545}, "procedural": {"x": 420, "y": 620}, "consolidation": {"x": 700, "y": 590}, "hippoStub": {"x": 560, "y": 650}, "wernicke": {"x": 700, "y": 470}, "arcuate": {"x": 450, "y": 405}, "arasStub": {"x": 830, "y": 640}, "language-synthesis": {"x": 300, "y": 760}};
 nodes.forEach(n=>{ if(_pos[n.data.id]) n.position = _pos[n.data.id]; });
 
 const edges = [
